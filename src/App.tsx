@@ -1,9 +1,12 @@
 import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
+import { Board } from "./pages/Board/Board";
+// import { StandartPage } from "./pages/StandartPage";
 
 function App() {
-  return (
+  const standartPage =
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
@@ -20,6 +23,14 @@ function App() {
         </a>
       </header>
     </div>
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={standartPage}></Route>
+        <Route path="/board" element={<Board />}></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
