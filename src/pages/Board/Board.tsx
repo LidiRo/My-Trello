@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import './board.scss';
 import { List } from "./components/List/List";
+
 
 export const Board = () => {
     const [title] = useState("Моя тестова дошка");
@@ -34,9 +36,11 @@ export const Board = () => {
         <>
             <h1>{title}</h1>
             <div className="lists">
-                {/* {lists.map((item) => (
-                    <List key={item.id} title={item.title} cards={item.cards} />))} */}
+                {lists.map((item) => (
+                    <div><List key={item.id} title={item.title} cards={item.cards} /></div>
+                ))}
             </div>
+            <button type="button">+ Додати список</button>
         </>
     );
 }
