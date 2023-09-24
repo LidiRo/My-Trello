@@ -1,0 +1,34 @@
+@import '../my-app/src/_styles';
+
+body{
+    background-color: $primary-color-background;
+}
+
+.board-title{
+    font-family: $primary-font-family;
+    font-size: 42px;
+    color: $primary-font-color;
+    text-align: center;
+}
+
+.lists-container{
+    display: flex;
+    flex-direction: row;
+    margin-left: 50px;
+}
+
+.lists{
+    display: flex;
+    flex-direction: row;
+}
+
+.add-list-button {
+    width: 200px;
+    height: 30px;
+    border-radius: $border-radius;
+    text-align: left;
+    font-family: $primary-font-family;
+    font-size: $text-font-size;
+    background-color: $primary-color-button;
+    color: $font-color-button;
+}

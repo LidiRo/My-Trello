@@ -33,14 +33,19 @@ export const Board = () => {
     ]);
 
     return (
-        <>
-            <h1>{title}</h1>
-            <div className="lists">
-                {lists.map((item) => (
-                    <div><List key={item.id} title={item.title} cards={item.cards} /></div>
-                ))}
+        <div className="board-container">
+            <h1 className="board-title">{title}</h1>
+            <div className="lists-container">
+                <div className="lists">
+                    {lists.map((item) => (
+                        <div><List key={item.id} title={item.title} cards={item.cards} /></div>
+                    ))}
+                </div>
+                <div className="add-list-button-container">
+                    <button type="button" className="add-list-button">+ Додати список</button>
+                </div>
             </div>
-            <button type="button">+ Додати список</button>
-        </>
+
+        </div>
     );
 }

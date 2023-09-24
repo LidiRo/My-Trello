@@ -1,5 +1,6 @@
 import React from "react";
+import '../list.scss';
 
 export const Card = ({ title }: { title: string }) => (
-    <div>{ title }</div>
+    <div className="card-title">{ title }</div>
 );
