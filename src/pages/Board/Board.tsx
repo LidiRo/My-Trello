@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from 'react-router-dom';
 import './board.scss';
 import { List } from "./components/List/List";
 
@@ -31,21 +32,25 @@ export const Board = () => {
             ]
         }
     ]);
+    let {board_id} = useParams();
+    console.log("params.id = " + board_id);
 
     return (
         <div className="board-container">
-            <h1 className="board-title">{title}</h1>
+            <div className="board-header">
+                <button type="button" className="back-home-button">Додому</button>
+                <h1 className="board-title">{title} {board_id}</h1>
+            </div>
             <div className="lists-container">
                 <div className="lists">
                     {lists.map((item) => (
-                        <div><List key={item.id} title={item.title} cards={item.cards} /></div>
+                        <div key={item.id}><List key={item.id} title={item.title} cards={item.cards} /></div>
                     ))}
                 </div>
                 <div className="add-list-button-container">
                     <button type="button" className="add-list-button">+ Додати список</button>
                 </div>
             </div>
-
         </div>
     );
 }

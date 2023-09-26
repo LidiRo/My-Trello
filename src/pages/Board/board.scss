@@ -4,11 +4,16 @@ body{
     background-color: $primary-color-background;
 }
 
+.board-header{
+    display: flex;
+    align-items: center;
+}
+
 .board-title{
     font-family: $primary-font-family;
     font-size: 42px;
     color: $primary-font-color;
-    text-align: center;
+    margin-left: 30%;
 }
 
 .lists-container{
@@ -22,7 +27,7 @@ body{
     flex-direction: row;
 }
 
-.add-list-button {
+.add-list-button, .back-home-button {
     width: 200px;
     height: 30px;
     border-radius: $border-radius;
@@ -31,4 +36,9 @@ body{
     font-size: $text-font-size;
     background-color: $primary-color-button;
     color: $font-color-button;
+}
+
+.back-home-button {
+    width: 75px;
+    margin-left: 50px;
 }

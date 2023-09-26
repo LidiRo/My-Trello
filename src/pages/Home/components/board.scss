@@ -1,0 +1,12 @@
+@import '../my-app/src/_styles';
+
+.board-home-title{
+    width: 250px;
+    height: 150px;
+    border-radius: 15px;
+    font-family: $primary-font-family;
+    font-size: 30px;
+    color: $primary-font-color;
+    text-align: center;
+    margin-bottom: 35px;
+}

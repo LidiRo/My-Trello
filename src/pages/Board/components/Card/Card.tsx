@@ -1,6 +1,6 @@
 import React from "react";
 import '../list.scss';
 
-export const Card = ({ title }: { title: string }) => (
-    <div className="card-title">{ title }</div>
+export const Card = (props: { title: string }) => (
+    <div className="card-title">{ props.title }</div>
 );
