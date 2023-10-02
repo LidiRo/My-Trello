@@ -1,5 +1,5 @@
 import React from "react";
-import '../list.scss';
+import './list.scss';
 import { IList } from "../../../../common/interfaces/IList";
 import { Card } from "../Card/Card";
 
