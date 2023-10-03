@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+// import { AxiosResponse } from "axios"
 import { Link } from 'react-router-dom';
 import "./home.scss";
 import { BoardHome } from "./components/BoardHome/BoardHome";
@@ -22,24 +23,22 @@ export const Home = () => {
     // ]);
 
     const [boards, setBoards] = useState<IBoard[]>([]);
-
-    const [error, setError] = useState('');
-
+    // const [error, setError] = useState('');
     const [isModal, setModal] = useState(false);
     const onClose = () => setModal(false);
-    const onCreate = () => alert('Create Board');
 
     useEffect(() => {
         const fetchData = async () => {
-            const { data }: any = await instance
-                .get<IBoard[]>('boards')
-                .catch(err => {
-                    setError(err.message)
-                });
+            const { data }: any = await instance.get<IBoard[]>('boards')
             setBoards(data);
         }
         fetchData();
     }, [])
+
+    const onCreate = () => {
+        alert("OK")
+        console.log(boards)
+    };
 
     function handleClick() {
         setModal(true);
@@ -49,17 +48,25 @@ export const Home = () => {
         <div className="home-container">
             <h1 className="home-title">{title}</h1>
             <div className="home-boards-container">
-                {error}
+                {/* {error} */}
                 <div className="home-boards">
                     {boards.map((board) => (
-                        <Link to={`/board/:${board.id}`} key={board.id}><div className="board-home-title" style={board.custom}><BoardHome key={board.id} title={board.title} background={board.custom.background} border={board.custom.border} /></div></Link>
+                        <Link to={`/board/:${board.id}`} key={board.id}>
+                            <div className="board-home-title" style={board.custom}>
+                                <BoardHome
+                                    key={board.id}
+                                    title={board.title}
+                                    background={board.custom.background}
+                                    border={board.custom.border} />
+                            </div>
+                        </Link>
                     ))}
                     <button type="button" className="add-home-board-button" onClick={handleClick}>+ Створити дошку</button>
                     <Modal
                         visible={isModal}
                         title="Створити дошку"
                         onClose={onClose}
-                        onCreate={onCreate}/>
+                        onCreate={onCreate} />
                 </div>
             </div>
         </div>

@@ -40,18 +40,17 @@ export const Board = () => {
     // ]);
     
     const [lists, setLists] = useState<IList[]>([]);
-    const [error, setError] = useState('');
+    // const [error, setError] = useState('');
     
     let { board_id } = useParams();
     console.log("params.id = " + board_id);
 
     useEffect(() => {
         const fetchData = async () => {
-            const { data } : any = await instance
-                .get<IList[]>('lists')
-                .catch(err => {
-                    setError(err.message)
-                }); 
+            const { data } : any = await instance.get<IList[]>('lists')
+                // .catch(err => {
+                //     setError(err.message)
+                // }); 
             setLists(data);
         }
         fetchData();
@@ -66,7 +65,7 @@ export const Board = () => {
                 <h1 className="board-title">{title} {board_id}</h1>
             </div>
             <div className="lists-container">
-                {error}
+                {/* {error} */}
                 <div className="lists">
                     {/* {lists.map((item) => (
                         <div key={item.id}><List key={item.id} title={item.title} cards={item.cards} /></div>
