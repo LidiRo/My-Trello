@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { api } from '../common/constants';
 
 const instance = axios.create({
@@ -9,7 +9,7 @@ const instance = axios.create({
     },
 });
 
-instance.interceptors.response.use((res) => {
+instance.interceptors.response.use((res: AxiosResponse) => {
     return res.data
 });
 

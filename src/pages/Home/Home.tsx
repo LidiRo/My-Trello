@@ -1,74 +1,107 @@
-import React, { useEffect, useState } from "react";
-// import { AxiosResponse } from "axios"
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from "react";
 import "./home.scss";
+import { Link } from 'react-router-dom';
 import { BoardHome } from "./components/BoardHome/BoardHome";
+import api from "../../api/request";
 import instance from "../../api/request";
-import { Modal } from "./components/Modal/Modal";
-
-interface IBoard {
-    id: number;
-    title: string;
-    custom: any
-}
+import { IBoard } from "../../common/interfaces/IBoard";
+import { BoardsServerResponse } from "../../common/interfaces/BoardsServerResponse";
 
 export const Home = () => {
-    const [title] = useState("Мої дошки");
-
-    // const [boards] = useState([
-    //     { id: 1, title: "покупки", custom: { background: "rgba(255, 176, 176, 0.5)", border: "2px solid rgba(255, 176, 176, 0.7)" } },
-    //     { id: 2, title: "підготовка до весілля", custom: { background: "rgba(176, 255, 176, 0.5)", border: "2px solid rgba(176, 255, 176, 0.7)" } },
-    //     { id: 3, title: "розробка інтернет-магазину", custom: { background: "rgba(176, 176, 255, 0.5)", border: "2px solid rgba(176, 176, 255, 0.7" } },
-    //     { id: 4, title: "курс по просуванню у соцмережах", custom: { background: "rgba(176, 176, 176, 0.5)", border: "2px solid rgba(176, 176, 176, 0.7)" } }
-    // ]);
-
     const [boards, setBoards] = useState<IBoard[]>([]);
-    // const [error, setError] = useState('');
+    const [inputValues, setInputValues] = useState('');
     const [isModal, setModal] = useState(false);
     const onClose = () => setModal(false);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const { data }: any = await instance.get<IBoard[]>('boards')
-            setBoards(data);
+        const fetchBoards = async () => {
+            try {
+                const data: BoardsServerResponse = await instance.get('/board');
+                setBoards(data?.boards)
+            } catch (err: any) {
+                console.log(`Error: ${err.message}`);
+            }
         }
-        fetchData();
+        fetchBoards();
     }, [])
 
-    const onCreate = () => {
-        alert("OK")
-        console.log(boards)
-    };
+    const pattern = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
 
-    function handleClick() {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log(pattern.test(inputValues))
+
+        if (inputValues !== "" && pattern.test(inputValues)) {
+            try {
+                const board = { title: inputValues };
+                await api.post(`/board`, board);
+            } catch (err: any) {
+                console.log(`Error: ${err.message}`);
+            }
+        }
+
+
+        try {
+            const data: BoardsServerResponse = await instance.get('/board');
+            setBoards(data?.boards)
+        } catch (err: any) {
+            console.log(`Error: ${err.message}`);
+        }
+        setModal(false);
+    }
+
+    const handleClick = async (e: React.FormEvent) => {
+        e.preventDefault();
         setModal(true);
+    }
+
+    const handleDelete = async (id: any) => {
+        try {
+            await api.delete(`/board/${id}`);
+            const boardsList = boards.filter(board => board.id !== id);
+            setBoards(boardsList);
+        } catch (err: any) {
+            console.log(`Error: ${err.message}`);
+        }
     }
 
     return (
         <div className="home-container">
-            <h1 className="home-title">{title}</h1>
-            <div className="home-boards-container">
-                {/* {error} */}
-                <div className="home-boards">
-                    {boards.map((board) => (
-                        <Link to={`/board/:${board.id}`} key={board.id}>
-                            <div className="board-home-title" style={board.custom}>
-                                <BoardHome
-                                    key={board.id}
-                                    title={board.title}
-                                    background={board.custom.background}
-                                    border={board.custom.border} />
-                            </div>
+            <h1 className="home-title">Мої дошки</h1>
+            <div className="home-boards">
+                {!boards || boards.map(board => (
+                    <div key={board.id}>
+                        <Link to={`/board/${board.id}`} >
+                            <BoardHome
+                                key={board.id}
+                                title={board.title + board.id}
+                            />
                         </Link>
-                    ))}
-                    <button type="button" className="add-home-board-button" onClick={handleClick}>+ Створити дошку</button>
-                    <Modal
-                        visible={isModal}
-                        title="Створити дошку"
-                        onClose={onClose}
-                        onCreate={onCreate} />
-                </div>
+                        <button type="button" onClick={() => handleDelete(board.id)}>Delete</button>
+                    </div>
+                ))}
+                <button type="button" className="add-home-board-button" onClick={handleClick}>+ Створити дошку</button>
             </div>
+            {isModal &&
+                <div className='modal' onClick={onClose}>
+                    <div className='modal-dialog' onClick={e => e.stopPropagation()}>
+                        <div className='modal-header'>
+                            <h3 className='modal-title'>Створити дошку</h3>
+                            <span className='modal-close' onClick={onClose}>
+                                &times;
+                            </span>
+                        </div>
+                        <form onSubmit={handleSubmit}>
+                            <div className='modal-body'>
+                                <label>
+                                    <input type="text" className='modal-input' value={inputValues} onChange={e => setInputValues(e.target.value)} />
+                                </label>
+                                <button type="submit">Створити</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
         </div>
     )
 }
