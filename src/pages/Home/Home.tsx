@@ -2,51 +2,28 @@ import { useEffect, useState } from "react";
 import "./home.scss";
 import { Link } from 'react-router-dom';
 import { BoardHome } from "./components/BoardHome/BoardHome";
-import api from "../../api/request";
-import instance from "../../api/request";
 import { IBoard } from "../../common/interfaces/IBoard";
-import { BoardsServerResponse } from "../../common/interfaces/BoardsServerResponse";
+import { Modal } from "./components/Modal/Modal";
+import getData from "../../common/requests/getData";
+import postData from "../../common/requests/postData";
+import deleteData from "../../common/requests/deleteData";
+
+const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
 
 export const Home = () => {
     const [boards, setBoards] = useState<IBoard[]>([]);
-    const [inputValues, setInputValues] = useState('');
     const [isModal, setModal] = useState(false);
     const onClose = () => setModal(false);
 
     useEffect(() => {
-        const fetchBoards = async () => {
-            try {
-                const data: BoardsServerResponse = await instance.get('/board');
-                setBoards(data?.boards)
-            } catch (err: any) {
-                console.log(`Error: ${err.message}`);
-            }
-        }
-        fetchBoards();
+        getData().then(data => data !== undefined ? setBoards(data?.boards) : []);
     }, [])
 
-    const pattern = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log(pattern.test(inputValues))
-
-        if (inputValues !== "" && pattern.test(inputValues)) {
-            try {
-                const board = { title: inputValues };
-                await api.post(`/board`, board);
-            } catch (err: any) {
-                console.log(`Error: ${err.message}`);
-            }
+    const addBoard = async (name: string) => {
+        if (name !== "" && PATTERN.test(name)) {
+            await postData(name);
         }
-
-
-        try {
-            const data: BoardsServerResponse = await instance.get('/board');
-            setBoards(data?.boards)
-        } catch (err: any) {
-            console.log(`Error: ${err.message}`);
-        }
+        getData().then(data => data !== undefined ? setBoards(data?.boards) : []);
         setModal(false);
     }
 
@@ -55,14 +32,8 @@ export const Home = () => {
         setModal(true);
     }
 
-    const handleDelete = async (id: any) => {
-        try {
-            await api.delete(`/board/${id}`);
-            const boardsList = boards.filter(board => board.id !== id);
-            setBoards(boardsList);
-        } catch (err: any) {
-            console.log(`Error: ${err.message}`);
-        }
+    const handleDelete = async (id : number | undefined) => {
+        deleteData(id, boards).then(data => data !== undefined ? setBoards(data) : []);
     }
 
     return (
@@ -74,7 +45,7 @@ export const Home = () => {
                         <Link to={`/board/${board.id}`} >
                             <BoardHome
                                 key={board.id}
-                                title={board.title + board.id}
+                                title={board.title + ' ' +board.id}
                             />
                         </Link>
                         <button type="button" onClick={() => handleDelete(board.id)}>Delete</button>
@@ -82,26 +53,7 @@ export const Home = () => {
                 ))}
                 <button type="button" className="add-home-board-button" onClick={handleClick}>+ Створити дошку</button>
             </div>
-            {isModal &&
-                <div className='modal' onClick={onClose}>
-                    <div className='modal-dialog' onClick={e => e.stopPropagation()}>
-                        <div className='modal-header'>
-                            <h3 className='modal-title'>Створити дошку</h3>
-                            <span className='modal-close' onClick={onClose}>
-                                &times;
-                            </span>
-                        </div>
-                        <form onSubmit={handleSubmit}>
-                            <div className='modal-body'>
-                                <label>
-                                    <input type="text" className='modal-input' value={inputValues} onChange={e => setInputValues(e.target.value)} />
-                                </label>
-                                <button type="submit">Створити</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            }
+            {isModal && <Modal visible={isModal} onClose={onClose} createBoard={addBoard} />}
         </div>
     )
 }
