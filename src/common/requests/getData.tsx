@@ -1,9 +1,9 @@
 import instance from "../../api/request";
-import { BoardsServerResponse } from "../../common/interfaces/BoardsServerResponse";
+import { ServerResponse } from "../interfaces/ServerResponse";
 
-const getData = async () => {
+const getData = async (api: string) => {
     try {
-        const data: BoardsServerResponse = await instance.get('/board');
+        const data: ServerResponse = await instance.get(api);
         return data;
     } catch (err: any) {
         console.log(`Error: ${err.message}`);

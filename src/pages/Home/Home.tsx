@@ -16,14 +16,14 @@ export const Home = () => {
     const onClose = () => setModal(false);
 
     useEffect(() => {
-        getData().then(data => data !== undefined ? setBoards(data?.boards) : []);
+        getData('/board').then(data => data !== undefined ? setBoards(data?.boards) : []);
     }, [])
 
     const addBoard = async (name: string) => {
         if (name !== "" && PATTERN.test(name)) {
             await postData(name);
         }
-        getData().then(data => data !== undefined ? setBoards(data?.boards) : []);
+        getData('/board').then(data => data !== undefined ? setBoards(data?.boards) : []);
         setModal(false);
     }
 
@@ -42,10 +42,10 @@ export const Home = () => {
             <div className="home-boards">
                 {!boards || boards.map(board => (
                     <div key={board.id}>
-                        <Link to={`/board/${board.id}`} >
+                        <Link to={`/board/${board.id}`}>
                             <BoardHome
                                 key={board.id}
-                                title={board.title + ' ' +board.id}
+                                title={board.title}
                             />
                         </Link>
                         <button type="button" onClick={() => handleDelete(board.id)}>Delete</button>
