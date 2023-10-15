@@ -7,6 +7,7 @@ import { Modal } from "./components/Modal/Modal";
 import getData from "../../common/requests/getData";
 import postData from "../../common/requests/postData";
 import deleteData from "../../common/requests/deleteData";
+import instance from "../../api/request";
 
 const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
 
@@ -19,11 +20,15 @@ export const Home = () => {
         getData('/board').then(data => data !== undefined ? setBoards(data?.boards) : []);
     }, [])
 
+    // console.log("boards", boards);
+
+
     const addBoard = async (name: string) => {
         if (name !== "" && PATTERN.test(name)) {
             await postData(name);
         }
-        getData('/board').then(data => data !== undefined ? setBoards(data?.boards) : []);
+        const board: { board: [] } = await instance.get(`/board`);
+        setBoards(board.board)
         setModal(false);
     }
 
