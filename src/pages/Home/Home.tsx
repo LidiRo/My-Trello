@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import { BoardHome } from "./components/BoardHome/BoardHome";
 import { IBoard } from "../../common/interfaces/IBoard";
 import { Modal } from "./components/Modal/Modal";
-import getData from "../../common/requests/getData";
-import postData from "../../common/requests/postData";
 import deleteData from "../../common/requests/deleteData";
 import instance from "../../api/request";
 
@@ -17,18 +15,33 @@ export const Home = () => {
     const onClose = () => setModal(false);
 
     useEffect(() => {
-        getData('/board').then(data => data !== undefined ? setBoards(data?.boards) : []);
+        const fetchData = async (): Promise<void> => {
+            try {
+                const board: { boards: [] } = await instance.get(`/board`);
+                setBoards(board.boards);
+            } catch (err: any) {
+                console.log(`Error: ${err.message}`);
+            }
+        }
+        fetchData();
     }, [])
-
-    // console.log("boards", boards);
-
 
     const addBoard = async (name: string) => {
         if (name !== "" && PATTERN.test(name)) {
-            await postData(name);
+            try {
+                const board = { title: name };
+                await instance.post(`/board`, board);
+            } catch (err: any) {
+                console.log(`Error: ${err.message}`);
+            }
         }
-        const board: { board: [] } = await instance.get(`/board`);
-        setBoards(board.board)
+
+        try {
+            const board: { boards: [] } = await instance.get(`/board`);
+            setBoards(board.boards);
+        } catch (err: any) {
+            console.log(`Error: ${err.message}`);
+        }
         setModal(false);
     }
 

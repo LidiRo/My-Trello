@@ -1,9 +1,8 @@
 import instance from "../../api/request";
 
-const postData = async (title: string) => {
+const postData = async (title: string, api: string) => {
     try {
-        const board = { title: title };
-        await instance.post(`/board`, board);
+        await instance.post(api, { title: title });
     } catch (err: any) {
         console.log(`Error: ${err.message}`);
     }

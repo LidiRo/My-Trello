@@ -1,0 +1,46 @@
+@import '../my-app/src/_styles';
+
+.create-new-list-modal-dialog {
+    width: 100%;
+    height: 110px;
+    max-width: 240px;
+    background: white;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.create-new-list-modal-close img {
+    cursor: pointer;
+    width: 20px;
+    margin-left: 5px;
+    vertical-align: bottom;
+}
+
+.create-new-list-modal-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.create-new-list-modal-body div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.create-new-list-modal-input {
+    width: 192px;
+    margin-bottom: 20px;
+}
+
+.create-new-list-modal-button {
+    width: 130px;
+    border: 1px solid rgba(165, 203, 203, 0.7);
+    background-color: rgba(165, 203, 203, 0.5);
+    border-radius: 5px;
+    font-family: $primary-font-family;
+    font-size: 20px;
+    color: $primary-font-color;
+}
