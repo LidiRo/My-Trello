@@ -7,16 +7,30 @@
     border: 1px solid $color-border;
     margin-right: 20px;
     width: 200px;
-    height: 400px;
+    // height: 400px;
+    height: 100%;
     border-radius: $border-radius;
     background: $primary-color-list;
 }
 
-.list-title{
+.list-title h2 {
     width: 180px;
     font-family: $primary-font-family;
     font-size: $title-font-size;
     color: $primary-font-color;
+    margin: 15px 0;
+}
+
+.list-title input {
+    width: 180px;
+    font-family: $primary-font-family;
+    font-size: $title-font-size;;
+    background: #f3f3f3;
+    // border: 1px solid $color-border;
+    // border-color: rgba(80, 3, 204, 0.712);
+    color: $primary-font-color;
+    text-align: left;
+    margin: 15px 0;
 }
 
 .cards{
@@ -45,21 +59,31 @@
 .add-card-button-container{
     width: 180px;
     height: 30px;
-    padding-left: 5px;
-    background-color: $primary-color-button;
-    border-radius: $border-radius;
-    
+    // padding-left: 5px;
+    // background-color: $primary-color-button;
+    // border-radius: $border-radius;
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-card-button-container img {
+    width: 35px;
 }
 
 .add-card-button {
-    width: 100%;
+    width: 125px;
     height: 100%;
-    text-align: left;
+    text-align: center;
     border: none;
     padding: 0;
     background-color: $primary-color-button;
+    // background-color: $primary-color-list;
     color: $font-color-button;
     font-family: $primary-font-family;
     font-size: $text-font-size;
     border-radius: $border-radius;
+}
+.del-list-button img{
+    width: 35px;
+    height: 30px;
 }

@@ -4,7 +4,6 @@ import './board.scss';
 import { List } from "./components/List/List";
 import { IList } from "../../common/interfaces/IList";
 import instance from "../../api/request";
-import postData from "../../common/requests/postData";
 import CreateNewList from "./components/CreateNewList/CreateNewList";
 
 const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
@@ -14,8 +13,6 @@ export const Board = () => {
     const [lists, setLists] = useState<IList[]>([]);
     const [title, setTitle] = useState('');
     const [isMouseEnter, setIsMouseEnter] = useState(false);
-
-    const [inputValues, setInputValues] = useState('');
 
     let { board_id } = useParams();
     
@@ -29,8 +26,6 @@ export const Board = () => {
         const fetchData = async (): Promise<void> => {
             try {
                 const board: Board = await instance.get(`/board/${board_id}`);
-                console.log("board.list", board.lists)
-
                 if (board.lists !== undefined) {
                     setLists(board.lists);
                 }
@@ -41,8 +36,8 @@ export const Board = () => {
             
         }
         fetchData();
-    }, [])
-    console.log("lists", lists)
+    }, [board_id])
+
     const handleBlur = () => {
         setIsMouseEnter(false);
     }
@@ -50,7 +45,7 @@ export const Board = () => {
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
         setTitle(newTitle);
-        changeTitle(newTitle);
+        changeTitleBoard(newTitle);
     }
 
     const handleKeyDown = (e: any) => {
@@ -60,7 +55,7 @@ export const Board = () => {
         }
     }
 
-    const changeTitle = async (title: string): Promise<void> => {
+    const changeTitleBoard = async (title: string): Promise<void> => {
         if (title !== "" && PATTERN.test(title)) {
             try {
                 await instance.put(`/board/${board_id}`, { title: title });
@@ -81,6 +76,7 @@ export const Board = () => {
 
             const fetchData: { lists: IList[] } = await instance.get(`/board/${board_id}`);
             setLists(fetchData.lists);
+            
         } catch (err: any) {
             console.log(`Error: ${err.message}`)
         }
@@ -99,6 +95,19 @@ export const Board = () => {
         }
     }
 
+    const changeTitleList = async (title: string, id: number | undefined) => {
+        if (title !== "" && PATTERN.test(title)) {
+            try {
+                await instance.put(`/board/${board_id}/list/${id}`, { title: title });
+                const fetchData: { lists: IList[] } = await instance.get(`/board/${board_id}`);
+                setLists(fetchData.lists);
+
+            } catch (err: any) {
+                console.log(`Error: ${err.message}`);
+            }
+        }
+    }
+
     return (
         <div className="board-container">
             <div className="board-header">
@@ -109,7 +118,6 @@ export const Board = () => {
                     {isMouseEnter && <input type="text" defaultValue={title} name="title" onBlur={handleBlur} onChange={handleChange} onKeyDown={handleKeyDown} onFocus={e => e.target.select()} autoFocus />}
                     {!isMouseEnter &&
                         <h1
-                            onMouseEnter={() => console.log("Mouse Enter")}
                             onClick={() => setIsMouseEnter(true)}>
                             {title}
                         </h1>}
@@ -119,7 +127,7 @@ export const Board = () => {
                 <div className="lists">
                     {!lists || lists.map((list) => (
                         <div key={list.id}>
-                            <List key={list.id} title={list.title} cards={list.cards} />
+                            <List key={list.id} id={list.id} title={list.title} cards={list.cards}changeTitle={changeTitleList}/>
                             <button type="button" onClick={() => handleDelete(list.id)}>Delete</button>
                         </div>
                     ))}
