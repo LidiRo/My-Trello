@@ -10,7 +10,7 @@ import instance from "../../api/request";
 
 const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
 
-export const Home = () => {
+export const HomeCopy = () => {
     const [boards, setBoards] = useState<IBoard[]>([]);
     const [isModal, setModal] = useState(false);
     const onClose = () => setModal(false);

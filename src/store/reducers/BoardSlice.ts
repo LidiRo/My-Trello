@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IBoard } from "../../common/interfaces/IBoard";
-import { fetchBoards } from "./ActionCreators";
 
 interface BoardState {
     boards: IBoard[];
@@ -16,33 +15,17 @@ const initialState: BoardState = {
 
 export const boardSlice = createSlice({
     name: 'board',
-    initialState,
+    initialState, 
     reducers: {
-        // boardsFetching(state) {
-        //     state.isLoading = true;
-        // },
-
-        // boardsFetchingSuccess(state, action: PayloadAction<IBoard[]>) {
-        //     state.isLoading = false;
-        //     state.error = '';
-        //     state.boards = action.payload;
-        // },
-
-        // boardsFetchingError(state, action: PayloadAction<string>) {
-        //     state.isLoading = false;
-        //     state.error = action.payload;
-        // }
-    },
-    extraReducers: {
-        [fetchBoards.fulfilled.type]: (state, action: PayloadAction<IBoard[]>) => {
+        boardsFetching(state) {
+            state.isLoading = true;
+        },
+        boardsFetchingSuccess(state, action: PayloadAction<IBoard[]>) {
             state.isLoading = false;
             state.error = '';
             state.boards = action.payload;
         },
-        [fetchBoards.pending.type]: (state) => {
-            state.isLoading = true;
-        },
-        [fetchBoards.rejected.type]: (state, action: PayloadAction<string>) => {
+        boardsFetchingError(state, action: PayloadAction<string>) {
             state.isLoading = false;
             state.error = action.payload;
         }
