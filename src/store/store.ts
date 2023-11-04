@@ -1,8 +1,10 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import boardReducer from './reducers/BoardSlice';
+import listReducer from './reducers/ListSlice';
 
 const rootReducer = combineReducers({
-    boardReducer
+    boardReducer,
+    listReducer
 })
 
 export const setupStore = () => {

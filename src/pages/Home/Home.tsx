@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import "./home.scss";
-import { fetchBoards, postBoards } from "../../store/reducers/ActionCreators";
+import { fetchAllBoards, createBoard, deleteBoard } from "../../store/reducers/boardActions";
 import { Link } from "react-router-dom";
 import { BoardHome } from "./components/BoardHome/BoardHome";
 import { Modal } from "./components/Modal/Modal";
@@ -15,23 +15,28 @@ export const Home = () => {
     const [isModal, setModal] = useState(false);
     const onClose = () => setModal(false);
 
-    console.log("boards", boards)
-
     useEffect(() => {
-        dispatch(fetchBoards());
-    }, [])
+        dispatch(fetchAllBoards());
+    }, [dispatch])
 
     const handleClick = async (e: React.FormEvent) => {
         e.preventDefault();
         setModal(true);
     }
 
-    const addBoard = async (title: string) => {
+    const handleAdd = async (title: string) => {
         if (title !== "" && PATTERN.test(title)) {
-            await dispatch(postBoards(title))
+            await dispatch(createBoard(title))
         }
-        await dispatch(fetchBoards());
+        await dispatch(fetchAllBoards());
         setModal(false);
+    }
+
+    const handleDelete = async (id: number | undefined) => {
+        if (id !== undefined) {
+            await dispatch(deleteBoard(id));
+            await dispatch(fetchAllBoards());
+        }
     }
 
     return (
@@ -46,13 +51,15 @@ export const Home = () => {
                             <BoardHome
                                 key={board.id}
                                 title={board.title}
+                                // onDelete={handleDelete}
                             />
                         </Link>
+                        <button type="button" onClick={() => handleDelete(board.id)}>Delete</button>
                     </div>
                 ))}
                 <button type="button" className="add-home-board-button" onClick={handleClick}>+ Створити дошку</button>
             </div>
-            {isModal && <Modal visible={isModal} onClose={onClose} createBoard={addBoard} />}
+            {isModal && <Modal visible={isModal} onClose={onClose} createBoard={handleAdd} />}
         </div>
     )
 }

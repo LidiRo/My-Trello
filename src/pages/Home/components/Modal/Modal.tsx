@@ -19,7 +19,6 @@ export const Modal = (props : IModal) => {
         props.createBoard(inputValues);
     }
 
-
     return (
         <div className='modal' onClick={props.onClose}>
             <div className='modal-dialog' onClick={e => e.stopPropagation()}>
@@ -32,7 +31,7 @@ export const Modal = (props : IModal) => {
                 <form onSubmit={handleSubmit}>
                     <div className='modal-body'>
                         <label >
-                            <input type="text" className='modal-input' value={inputValues} onChange={handleChange} />
+                            <input type="text" className='modal-input' value={inputValues} onChange={handleChange} autoFocus />
                         </label>
                         <button type="submit">Створити</button>
                     </div>

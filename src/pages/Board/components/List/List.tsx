@@ -38,7 +38,6 @@ export const List = (props: IList) => {
                     <h2 className="list-title" onClick={handleClickTitle}>
                         {props.title}
                     </h2>}
-
             </div>
             <ul className="cards">{props.cards?.map(el => <Card key={el.id} title={el.title} />)}</ul>
             <div className="add-card-button-container">

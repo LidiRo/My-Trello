@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './CreateNewList.scss'
-import IconClose from '../../../../images/icone-close.svg'
+import IconClose from '../../../../../images/icon-close.png'
 
 interface NewList {
     createList: (title: string) => void

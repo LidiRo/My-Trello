@@ -2,41 +2,24 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from 'react-router-dom';
 import './board.scss';
 import { List } from "./components/List/List";
-import { IList } from "../../common/interfaces/IList";
-import instance from "../../api/request";
-import CreateNewList from "./components/CreateNewList/CreateNewList";
+
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { fetchAllLists, createList, deleteList, editTitleBoard, editTitleList } from "../../store/reducers/listActions";
+import CreateNewList from "./components/List/CreateNewList/CreateNewList";
 
 const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
 
 export const Board = () => {
 
-    const [lists, setLists] = useState<IList[]>([]);
-    const [title, setTitle] = useState('');
+    const dispatch = useAppDispatch();
+    const { lists, title, error } = useAppSelector(state => state.listReducer);
     const [isMouseEnter, setIsMouseEnter] = useState(false);
 
     let { board_id } = useParams();
-    
-    interface Board {
-        title: string;
-        lists: IList[];
-        custom: { background: string };
-    }
 
     useEffect(() => {
-        const fetchData = async (): Promise<void> => {
-            try {
-                const board: Board = await instance.get(`/board/${board_id}`);
-                if (board.lists !== undefined) {
-                    setLists(board.lists);
-                }
-                setTitle(board.title);
-            } catch (err: any) {
-                console.log(`Error: ${err.message}`);
-            }
-            
-        }
-        fetchData();
-    }, [board_id])
+        dispatch(fetchAllLists(Number(board_id)));
+    }, [dispatch, board_id])
 
     const handleBlur = () => {
         setIsMouseEnter(false);
@@ -44,66 +27,52 @@ export const Board = () => {
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
-        setTitle(newTitle);
         changeTitleBoard(newTitle);
     }
 
     const handleKeyDown = (e: any) => {
         if (e.key === "Enter") {
-            
             setIsMouseEnter(false);
         }
     }
 
-    const changeTitleBoard = async (title: string): Promise<void> => {
+    const changeTitleBoard = async (title: string) => {
         if (title !== "" && PATTERN.test(title)) {
             try {
-                await instance.put(`/board/${board_id}`, { title: title });
-                const fetchData: { title: string } = await instance.get(`/board/${board_id}`);
-                setTitle(fetchData.title);
+                await dispatch(editTitleBoard(title, Number(board_id)));
+                await dispatch(fetchAllLists(Number(board_id)));
             } catch (err: any) {
-                console.log(`Error: ${err.message}`);
+                await dispatch(fetchAllLists(Number(board_id)));
             }
         }
     }
 
-    const createList = async (titleList: string) => {
-        try {
-            if (titleList !== "" && PATTERN.test(titleList)) {
-                const list = { title: titleList, position: lists?.length ? lists.length + 1 : 1 };
-                await instance.post(`/board/${board_id}/list`, list)
-            }
-
-            const fetchData: { lists: IList[] } = await instance.get(`/board/${board_id}`);
-            setLists(fetchData.lists);
-            
-        } catch (err: any) {
-            console.log(`Error: ${err.message}`)
+    const handleAdd = async (title: string) => {
+        if (title !== "" && PATTERN.test(title)) {
+            const position = lists?.length ? lists.length + 1 : 1;
+            await dispatch(createList(title, Number(board_id), position))
         }
+        await dispatch(fetchAllLists(Number(board_id)));
     }
 
     const handleDelete = async (id: number | undefined) => {
         try {
-            await instance.delete(`/board/${board_id}/list/${id}`);
-            const data = lists?.filter(list => list.id !== id);
-            if (data !== undefined) {
-                setLists(data);
+            if (id !== undefined) {
+                await dispatch(deleteList(Number(board_id), id));
+                await dispatch(fetchAllLists(Number(board_id)));
             }
-            
         } catch (err: any) {
-            console.log(`Error: ${err.message}`);
+            await dispatch(fetchAllLists(Number(board_id)));
         }
     }
 
     const changeTitleList = async (title: string, id: number | undefined) => {
         if (title !== "" && PATTERN.test(title)) {
             try {
-                await instance.put(`/board/${board_id}/list/${id}`, { title: title });
-                const fetchData: { lists: IList[] } = await instance.get(`/board/${board_id}`);
-                setLists(fetchData.lists);
-
+                await dispatch(editTitleList(title, Number(board_id), id));
+                await dispatch(fetchAllLists(Number(board_id)));
             } catch (err: any) {
-                console.log(`Error: ${err.message}`);
+                await dispatch(fetchAllLists(Number(board_id)));
             }
         }
     }
@@ -125,14 +94,15 @@ export const Board = () => {
             </div>
             <div className="lists-container">
                 <div className="lists">
-                    {!lists || lists.map((list) => (
+                    {error && <h1>{error}</h1>}
+                    {lists && lists.map((list) => (
                         <div key={list.id}>
-                            <List key={list.id} id={list.id} title={list.title} cards={list.cards}changeTitle={changeTitleList}/>
+                            <List key={list.id} id={list.id} title={list.title} cards={list.cards} changeTitle={changeTitleList} />
                             <button type="button" onClick={() => handleDelete(list.id)}>Delete</button>
                         </div>
                     ))}
                 </div>
-                <CreateNewList createList={createList} />
+                <CreateNewList createList={handleAdd} />
             </div>
         </div>
     );
