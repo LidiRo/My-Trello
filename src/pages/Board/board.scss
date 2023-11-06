@@ -5,8 +5,9 @@ body{
 }
 
 .board-header{
-    // display: flex;
-    // align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 // .board-title{
@@ -37,6 +38,13 @@ body{
     transform: translateX(-50%);
     top: 30px;
 }
+
+.icon-edit{
+    margin-right: 50px;
+    // position: fixed;
+    margin-top: 40px;
+}
+
 
 
 .lists-container{

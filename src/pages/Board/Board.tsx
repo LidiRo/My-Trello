@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from 'react-router-dom';
 import './board.scss';
 import { List } from "./components/List/List";
-
+import IconEdit from '../../images/icon-edit.png'
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { fetchAllLists, createList, deleteList, editTitleBoard, editTitleList } from "../../store/reducers/listActions";
 import CreateNewList from "./components/List/CreateNewList/CreateNewList";
@@ -91,6 +91,9 @@ export const Board = () => {
                             {title}
                         </h1>}
                 </div>
+                <div className="icon-edit">
+                    <img src={IconEdit} alt="edit" />
+                </div>
             </div>
             <div className="lists-container">
                 <div className="lists">
@@ -98,7 +101,7 @@ export const Board = () => {
                     {lists && lists.map((list) => (
                         <div key={list.id}>
                             <List key={list.id} id={list.id} title={list.title} cards={list.cards} changeTitle={changeTitleList} />
-                            <button type="button" onClick={() => handleDelete(list.id)}>Delete</button>
+                            <button type="button" onClick={() => handleDelete(list.id)}>Delete List</button>
                         </div>
                     ))}
                 </div>

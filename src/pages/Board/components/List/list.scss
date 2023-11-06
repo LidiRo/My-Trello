@@ -33,13 +33,23 @@
     margin: 15px 0;
 }
 
-.cards{
+.cards-container {
     display: flex;
     flex-direction: column;
-    width: 200px;
-    margin: 0;
+    width: 180px;
+}
+
+
+
+ul {
+    width: 180px;
     padding: 0;
-    align-items: center;
+    margin: 0;
+}
+
+ul div{
+    height: 30px;
+    // border: 1px solid white
 }
 
 .card-title{
@@ -56,6 +66,12 @@
     font-size: $text-font-size;
 }
 
+.card-title-block{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .add-card-button-container{
     width: 180px;
     height: 30px;
@@ -64,10 +80,12 @@
     // border-radius: $border-radius;
     display: flex;
     justify-content: space-between;
+    margin-top: 10px;
 }
 
 .add-card-button-container img {
     width: 35px;
+    height: 30px;
 }
 
 .add-card-button {

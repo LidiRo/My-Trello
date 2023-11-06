@@ -1,0 +1,23 @@
+.add-card-button-container {
+    width: 180px;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.add-card-button-container img {
+    width: 35px;
+}
+
+.add-card-button {
+    width: 125px;
+    height: 100%;
+    text-align: center;
+    border: none;
+    padding: 0;
+    background-color: $primary-color-button;
+    color: $font-color-button;
+    font-family: $primary-font-family;
+    font-size: $text-font-size;
+    border-radius: $border-radius;
+}

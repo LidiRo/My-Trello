@@ -40,7 +40,6 @@ const CreateNewList = (props: NewList) => {
     return (
         <div className="create-new-list-container">
             {isInputVisible &&
-
                 <div className='create-new-list-modal-dialog' onClick={e => { e.stopPropagation() }}>
                     <form onSubmit={handleSubmit}>
                         <div className='create-new-list-modal-body'>
@@ -53,11 +52,9 @@ const CreateNewList = (props: NewList) => {
                                     <img src={IconClose} alt="close" />
                                 </span>
                             </div>
-
                         </div>
                     </form>
                 </div>
-
             }
             {!isInputVisible &&
                 <button type="button" className="add-list-button" onClick={handleClick}>+Додати список</button>}
