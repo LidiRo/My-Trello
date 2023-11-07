@@ -6,19 +6,31 @@ import IconEdit from '../../images/icon-edit.png'
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { fetchAllLists, createList, deleteList, editTitleBoard, editTitleList } from "../../store/reducers/listActions";
 import CreateNewList from "./components/List/CreateNewList/CreateNewList";
+import TopLoadingBar from "../../common/TopLoadingBar";
+import api from '../../api/request';
 
 const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
 
 export const Board = () => {
 
     const dispatch = useAppDispatch();
-    const { lists, title, error } = useAppSelector(state => state.listReducer);
+    const { lists, title, error, isLoading } = useAppSelector(state => state.listReducer);
     const [isMouseEnter, setIsMouseEnter] = useState(false);
+    const [color, setColor] = useState<string>('rgb(241, 246, 244)');
+    // const [isLoading, setIsLoading] = useState(false);
 
     let { board_id } = useParams();
 
     useEffect(() => {
         dispatch(fetchAllLists(Number(board_id)));
+        // api.interceptors.request.use((config: any) => {
+        //     setIsLoading(true);
+        //     return config;
+        // });
+        // api.interceptors.response.use((response: any) => {
+        //     setIsLoading(false);
+        //     return response;
+        // });
     }, [dispatch, board_id])
 
     const handleBlur = () => {
@@ -77,6 +89,12 @@ export const Board = () => {
         }
     }
 
+    function changeBackground() {
+        console.log(document.body.style.background)
+        document.body.style.backgroundColor = color;
+    }
+
+        
     return (
         <div className="board-container">
             <div className="board-header">
@@ -92,11 +110,13 @@ export const Board = () => {
                         </h1>}
                 </div>
                 <div className="icon-edit">
-                    <img src={IconEdit} alt="edit" />
+                    {/* <img src={IconEdit} alt="edit" /> */}
+                    <input name="color" type="color" value={color} onChange={e => { setColor(e.target.value) }} onBlur={() => changeBackground()}></input>
                 </div>
             </div>
             <div className="lists-container">
                 <div className="lists">
+                    {isLoading && <h1>Завантаження даних...</h1> }
                     {error && <h1>{error}</h1>}
                     {lists && lists.map((list) => (
                         <div key={list.id}>
