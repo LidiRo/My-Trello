@@ -8,6 +8,8 @@ import { useParams } from "react-router-dom";
 import { createCard, deleteCard, editCard, fetchAllCards } from "../../../../store/reducers/cardActions";
 import { fetchAllLists } from "../../../../store/reducers/listActions";
 import { ICard } from "../../../../common/interfaces/ICard";
+import toast, { Toaster } from 'react-hot-toast';
+
 
 const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
 
@@ -59,7 +61,7 @@ export const List = (props: {
                 await dispatch(editCard(title, Number(board_id), id, list_id));
                 await dispatch(fetchAllLists(Number(board_id)));
             } catch (err: any) {
-                console.log(err)
+                toast.error(err.message)
             }
         }
     }
@@ -71,7 +73,7 @@ export const List = (props: {
                 await dispatch(fetchAllLists(Number(board_id)));
             }
         } catch (err: any) {
-            console.log(err);
+            toast.error(err.message)
         }
     }
 
@@ -95,5 +97,6 @@ export const List = (props: {
             <div className="add-card-button-container">
                 <CreateNewCard createCard={handleAdd} listId={Number(props.id)} />
             </div>
+            <Toaster />
         </div>);
 }

@@ -8,6 +8,7 @@ import { fetchAllLists, createList, deleteList, editTitleBoard, editTitleList } 
 import CreateNewList from "./components/List/CreateNewList/CreateNewList";
 import TopLoadingBar from "../../common/TopLoadingBar";
 import api from '../../api/request';
+import toast, { Toaster } from 'react-hot-toast';
 
 const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
 
@@ -18,6 +19,7 @@ export const Board = () => {
     const [isMouseEnter, setIsMouseEnter] = useState(false);
     const [color, setColor] = useState<string>('rgb(241, 246, 244)');
     // const [isLoading, setIsLoading] = useState(false);
+
 
     let { board_id } = useParams();
 
@@ -54,7 +56,7 @@ export const Board = () => {
                 await dispatch(editTitleBoard(title, Number(board_id)));
                 await dispatch(fetchAllLists(Number(board_id)));
             } catch (err: any) {
-                await dispatch(fetchAllLists(Number(board_id)));
+                toast.error(err.message)
             }
         }
     }
@@ -74,7 +76,7 @@ export const Board = () => {
                 await dispatch(fetchAllLists(Number(board_id)));
             }
         } catch (err: any) {
-            await dispatch(fetchAllLists(Number(board_id)));
+            toast.error(err.message)
         }
     }
 
@@ -84,7 +86,7 @@ export const Board = () => {
                 await dispatch(editTitleList(title, Number(board_id), id));
                 await dispatch(fetchAllLists(Number(board_id)));
             } catch (err: any) {
-                await dispatch(fetchAllLists(Number(board_id)));
+                toast.error(err.message)
             }
         }
     }
@@ -127,6 +129,7 @@ export const Board = () => {
                 </div>
                 <CreateNewList createList={handleAdd} />
             </div>
+            <Toaster />
         </div>
     );
 }
