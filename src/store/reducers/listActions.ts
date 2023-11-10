@@ -8,9 +8,10 @@ export const listActions = listSlice.actions;
 export const fetchAllLists = (board_id: number) => async (dispatch: AppDispatch) => {
     try {
         dispatch(listActions.loadingLists())
-        const response: { lists: IList[], title: string } = await listsService.fetchAllListsAPI(board_id);
+        const response: { lists: IList[], title: string, backgroundColor: string } = await listsService.fetchAllListsAPI(board_id);
         dispatch(listActions.setAllLists(response.lists))
         dispatch(listActions.setTitleBoard(response.title))
+        dispatch(listActions.setBackgroubdColor(response.backgroundColor))
     } catch (e: any) {
         dispatch(listActions.setError("ERROR" + e.message))
     }
@@ -32,6 +33,14 @@ export const editTitleBoard = (title: string, board_id: number) => async (dispat
 
 export const editTitleList = (title: string, board_id: number, id: number | undefined) => async (dispatch: AppDispatch) => {
     const response = await listsService.editTitleListAPI(title, board_id, id);
+    dispatch(listActions.editList(response.data))
+}
+
+export const editBackgroundBoard = (board_id: number, backgroundColor: string) => async (dispatch: AppDispatch) => {
+    console.log("backgroundColor", backgroundColor)
+    const custom = {backgroundColor: backgroundColor}
+    const response = await listsService.editBackgroundBoardAPI(board_id, custom);
+    console.log("response.data", response.data)
     dispatch(listActions.editList(response.data))
 }
 

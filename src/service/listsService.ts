@@ -4,7 +4,7 @@ import { IList } from "../common/interfaces/IList";
 
 const listsService = {
     async fetchAllListsAPI(board_id: number) {
-        const response: { lists: IList[], title: string } = await instance.get(`/board/${board_id}`);
+        const response: { lists: IList[], title: string, backgroundColor: string } = await instance.get(`/board/${board_id}`);
         return response;
     },
     async createListAPI(list: { title: string , board_id: number, position: number }) {
@@ -17,6 +17,14 @@ const listsService = {
     },
     async editTitleListAPI(title: string, board_id: number, id: number | undefined) {
         const response = await instance.put(`/board/${board_id}/list/${id}`, { title: title });
+        return response;
+    },
+    async editBackgroundBoardAPI(board_id: number, custom: { backgroundColor: string }) {
+        console.log("backgroundColor2", custom.backgroundColor)
+        console.log("custom", custom)
+
+        const response = await instance.put(`/board/${board_id}`, { custom });
+        console.log("response", response)
         return response;
     },
     async deleteListAPI(board_id: number, id: number) {

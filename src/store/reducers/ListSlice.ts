@@ -4,6 +4,8 @@ import { IList } from "../../common/interfaces/IList";
 interface ListState {
     title: string;
     lists: IList[];
+    custom: { backgroundColor: string };
+    backgroundColor: string;
     isLoading: boolean;
     error: string;
 }
@@ -11,6 +13,8 @@ interface ListState {
 const initialState: ListState = {
     title: '',
     lists: [],
+    custom: { backgroundColor: "rgb(241, 246, 244)" },
+    backgroundColor: "rgb(241, 246, 244)",
     isLoading: false,
     error: ''
 }
@@ -33,6 +37,9 @@ export const listSlice = createSlice({
         },
         setTitleBoard(state, action: PayloadAction<string>) {
             state.title = action.payload;
+        },
+        setBackgroubdColor(state, action: PayloadAction<string>) {
+            state.custom.backgroundColor = action.payload;
         },
         addNewList(state, action: PayloadAction<IList>) {
             state.lists.push(action.payload);

@@ -1,17 +1,25 @@
 @import '../my-app/src/_styles';
 
+.board-home-container{
+    // width: 250px;
+    // height: 150px;
+    // border-radius: 15px;
+    // font-family: $primary-font-family;
+    // font-size: 30px;
+    // color: $primary-font-color;
+    // text-align: center;
+    // margin-bottom: 35px;
+    // margin-right: 20px;
+    // border: 1px solid rgba(165, 203, 203, 0.7);
+    // background-color: rgba(165, 203, 203, 0.5);
+}
+
+// .board-home-container:hover{
+//     background-color: rgba(120, 182, 182, 0.5);
+// }
+
 .board-home-title{
-    width: 250px;
-    height: 150px;
-    border-radius: 15px;
-    font-family: $primary-font-family;
-    font-size: 30px;
-    color: $primary-font-color;
-    text-align: center;
-    margin-bottom: 35px;
-    margin-right: 20px;
-    border: 1px solid rgba(165, 203, 203, 0.7);
-    background-color: rgba(165, 203, 203, 0.5);
+    text-decoration: none;
 }
 
 a .board-home-button-delete{

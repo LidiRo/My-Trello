@@ -7,27 +7,117 @@
     text-align: center;
 }
 
-.home-boards{
+.home-boards-section{
+    // display: flex;
+    // flex-direction: row;
+    // flex-wrap: wrap;
+    width: 1100px;
+    // justify-content: flex-start;
+    // position: absolute;
+    // left: 0;
+    // right: 0;
+    // margin: 0 auto;
+    position: relative;
+    left: 15%;
+}
+
+.home-boards-section-list {
+    // position: absolute;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     width: 1100px;
     justify-content: flex-start;
+    
+}
+
+
+.link{
+    text-decoration: none;
+}
+
+.home-board{
+    position: relative;
+    list-style-type: none;
+}
+
+.board-home-container {
+    width: 250px;
+    height: 150px;
+    border-radius: 15px;
+    font-family: $primary-font-family;
+    font-size: 30px;
+    color: $primary-font-color;
+    text-align: center;
+    margin-bottom: 35px;
+    margin-right: 20px;
+    // margin-left: 20px;
+    border: 1px solid rgba(165, 203, 203, 0.7);
+    background-color: rgba(165, 203, 203, 0.5);
+}
+
+.board-home-container:hover {
+    background-color: rgba(120, 182, 182, 0.5);
+}
+
+.home-button-delete{
+    opacity: 1;
     position: absolute;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
+    top: 115px;
+    right: 30px;
+    width: 30px;
+    height: 30px;
+}
+
+.home-button-delete .tooltiptext{
+    visibility: hidden;
+    width: 400px;
+    background-color: rgb(218, 218, 218);
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 120%;
+    left: 50%;
+}
+
+.home-button-delete:hover .tooltiptext {
+    visibility: visible;
+}
+
+.home-button-delete:hover {
+    cursor: pointer;
+}
+
+// .board-home:hover .home-button-delete {
+//     opacity: 1;
+//     width: 30px;
+// }
+
+.home-button-delete img{
+    width: 30px;
+    height: 30px;
+}
+
+.add-home-board{
+    list-style-type: none;
 }
 
 .add-home-board-button{
     width: 250px;
     height: 150px;
     border: 1px solid rgba(165, 203, 203, 0.7);
-    background-color: rgba(165, 203, 203, 0.5);
+    background-color: rgba(188, 191, 206, 0.5);
     border-radius: 15px;
     font-family: $primary-font-family;
     font-size: 30px;
     color: $primary-font-color;
+}
+
+.add-home-board-button:hover{
+    background-color: rgba(155, 156, 162, 0.5);
+    cursor: pointer;
 }
 
 //Modal style

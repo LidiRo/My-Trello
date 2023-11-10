@@ -4,7 +4,7 @@ import './board.scss';
 import { List } from "./components/List/List";
 import IconEdit from '../../images/icon-edit.png'
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { fetchAllLists, createList, deleteList, editTitleBoard, editTitleList } from "../../store/reducers/listActions";
+import { fetchAllLists, createList, deleteList, editTitleBoard, editTitleList, editBackgroundBoard } from "../../store/reducers/listActions";
 import CreateNewList from "./components/List/CreateNewList/CreateNewList";
 import TopLoadingBar from "../../common/TopLoadingBar";
 import api from '../../api/request';
@@ -15,11 +15,13 @@ const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
 export const Board = () => {
 
     const dispatch = useAppDispatch();
-    const { lists, title, error, isLoading } = useAppSelector(state => state.listReducer);
+    const { lists, title, backgroundColor, error, isLoading } = useAppSelector(state => state.listReducer);
     const [isMouseEnter, setIsMouseEnter] = useState(false);
     const [color, setColor] = useState<string>('rgb(241, 246, 244)');
+    const [isBgColor, setIsBgColor] = useState<string>('rgb(241, 246, 244)');
     // const [isLoading, setIsLoading] = useState(false);
 
+    // console.log(backgroundColor)
 
     let { board_id } = useParams();
 
@@ -91,6 +93,17 @@ export const Board = () => {
         }
     }
 
+    const changeBackgroundColor = async (backgroundColor: string) => {
+        try {
+            console.log("bgColor", backgroundColor)
+            await dispatch(editBackgroundBoard(Number(board_id), backgroundColor));
+            console.log("bgColor2", backgroundColor)
+            await dispatch(fetchAllLists(Number(board_id)));
+        } catch (err: any) {
+            toast.error(err.message)
+        }
+    }
+
     function changeBackground() {
         console.log(document.body.style.background)
         document.body.style.backgroundColor = color;
@@ -113,7 +126,7 @@ export const Board = () => {
                 </div>
                 <div className="icon-edit">
                     {/* <img src={IconEdit} alt="edit" /> */}
-                    <input name="color" type="color" value={color} onChange={e => { setColor(e.target.value) }} onBlur={() => changeBackground()}></input>
+                    <input name="color" type="color" value={color} onChange={e => { setColor(e.target.value) }} onBlur={(e) => changeBackgroundColor(color)}></input>
                 </div>
             </div>
             <div className="lists-container">
