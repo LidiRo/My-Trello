@@ -1,50 +1,60 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import { Link, useParams } from 'react-router-dom';
 import './board.scss';
 import { List } from "./components/List/List";
-import IconEdit from '../../images/icon-edit.png'
-import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { fetchAllLists, createList, deleteList, editTitleBoard, editTitleList, editBackgroundBoard } from "../../store/reducers/listActions";
 import CreateNewList from "./components/List/CreateNewList/CreateNewList";
-import TopLoadingBar from "../../common/TopLoadingBar";
 import api from '../../api/request';
 import toast, { Toaster } from 'react-hot-toast';
+import { IList } from "../../common/interfaces/IList";
+import instance from "../../api/request";
+// import Backdrop from '@mui/material/Backdrop';
+// import CircularProgress from '@mui/material/CircularProgress';
+import LoadingBar from "react-top-loading-bar";
+import { ICard } from "../../common/interfaces/ICard";
+
 
 const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
 
-export const Board = () => {
-
-    const dispatch = useAppDispatch();
-    const { lists, title, backgroundColor, error, isLoading } = useAppSelector(state => state.listReducer);
-    const [isMouseEnter, setIsMouseEnter] = useState(false);
-    const [color, setColor] = useState<string>('rgb(241, 246, 244)');
-    const [isBgColor, setIsBgColor] = useState<string>('rgb(241, 246, 244)');
-    // const [isLoading, setIsLoading] = useState(false);
-
-    // console.log(backgroundColor)
-
+export const Board = (): ReactElement => {
     let { board_id } = useParams();
 
+    const [lists, setLists] = useState<IList[]>([]);
+    const [title, setTitle] = useState('');
+    const [isBgColor, setIsBgColor] = useState<string>("#D4E2EE");
+    const [isMouseEnter, setIsMouseEnter] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const divRef = useRef<HTMLDivElement | null>(null);
+
     useEffect(() => {
-        dispatch(fetchAllLists(Number(board_id)));
-        // api.interceptors.request.use((config: any) => {
-        //     setIsLoading(true);
-        //     return config;
-        // });
-        // api.interceptors.response.use((response: any) => {
-        //     setIsLoading(false);
-        //     return response;
-        // });
-    }, [dispatch, board_id])
 
-    const handleBlur = () => {
-        setIsMouseEnter(false);
-    }
+        const fetchData = async (): Promise<void> => {
+            try {
+                const board: { title: string, lists: IList[], custom?: { background: string } } = await instance.get(`/board/${board_id}`);
+                if (board.lists !== undefined) {
+                    setLists(board.lists);
+                }
+                setTitle(board.title);
+                if (board.custom?.background && divRef.current !== null) {
+                    divRef.current.style.backgroundColor = board.custom.background;
+                    setIsBgColor(board.custom.background)
+                }
+            } catch (err: any) {
+                toast.error(err.message);
+            }
+        }
 
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newTitle = e.target.value;
-        changeTitleBoard(newTitle);
-    }
+        api.interceptors.request.use((config: any) => {
+            setIsLoading(true);
+            return config;
+        });
+        api.interceptors.response.use((response: any) => {
+            setIsLoading(false);
+            return response;
+        });
+
+        fetchData();
+    }, [])
 
     const handleKeyDown = (e: any) => {
         if (e.key === "Enter") {
@@ -55,38 +65,69 @@ export const Board = () => {
     const changeTitleBoard = async (title: string) => {
         if (title !== "" && PATTERN.test(title)) {
             try {
-                await dispatch(editTitleBoard(title, Number(board_id)));
-                await dispatch(fetchAllLists(Number(board_id)));
+                await instance.put(`/board/${board_id}`, { title: title });
+                const board: { title: string } = await instance.get(`/board/${board_id}`);
+                setTitle(board.title);
             } catch (err: any) {
                 toast.error(err.message)
             }
         }
     }
 
-    const handleAdd = async (title: string) => {
-        if (title !== "" && PATTERN.test(title)) {
-            const position = lists?.length ? lists.length + 1 : 1;
-            await dispatch(createList(title, Number(board_id), position))
+    const handleAdd = async (title: string, namePage: string, list_id?: number, cards?: ICard[]) => {
+        try {
+            if (title !== "" && PATTERN.test(title)) {
+                if (namePage === "list") {
+                    const position = lists?.length ? lists.length + 1 : 1;
+                    await instance.post(`/board/${board_id}/list`, { title, position });
+                } else {
+                    const position = cards?.length ? cards.length + 1 : 1;
+                    const card = { title: title, list_id: list_id, position: position };
+                    await instance.post(`/board/${board_id}/card`, card);
+                }
+
+                const board: { lists: IList[] } = await instance.get(`/board/${board_id}`);
+                if (board.lists !== undefined) {
+                    setLists(board.lists);
+                }
+            }
+        } catch (err: any) {
+            toast.error(err.message);
         }
-        await dispatch(fetchAllLists(Number(board_id)));
     }
 
-    const handleDelete = async (id: number | undefined) => {
+    const handleDelete = async (id: number | undefined, namePage?: string) => {
         try {
             if (id !== undefined) {
-                await dispatch(deleteList(Number(board_id), id));
-                await dispatch(fetchAllLists(Number(board_id)));
+                if (namePage === "card") {
+                    await instance.delete(`/board/${board_id}/card/${id}`);
+                } else {
+                    await instance.delete(`/board/${board_id}/list/${id}`);
+                }
+
+                const board: { lists: IList[] } = await instance.get(`/board/${board_id}`);
+                if (board.lists !== undefined) {
+                    setLists(board.lists);
+                }
             }
         } catch (err: any) {
             toast.error(err.message)
         }
     }
 
-    const changeTitleList = async (title: string, id: number | undefined) => {
+    const changeTitle = async (title: string, list_id: number | undefined, card_id?: number | undefined, namePage?: string) => {
         if (title !== "" && PATTERN.test(title)) {
             try {
-                await dispatch(editTitleList(title, Number(board_id), id));
-                await dispatch(fetchAllLists(Number(board_id)));
+                if (namePage === "card") { 
+                    await instance.put(`/board/${board_id}/card/${card_id}`, { title: title, list_id });
+                } else {
+                    await instance.put(`/board/${board_id}/list/${list_id}`, { title: title });
+                }
+                
+                const board: { lists: IList[] } = await instance.get(`/board/${board_id}`);
+                if (board.lists !== undefined) {
+                    setLists(board.lists);
+                }
             } catch (err: any) {
                 toast.error(err.message)
             }
@@ -95,29 +136,43 @@ export const Board = () => {
 
     const changeBackgroundColor = async (backgroundColor: string) => {
         try {
-            console.log("bgColor", backgroundColor)
-            await dispatch(editBackgroundBoard(Number(board_id), backgroundColor));
-            console.log("bgColor2", backgroundColor)
-            await dispatch(fetchAllLists(Number(board_id)));
+            console.log("bgColor", backgroundColor);
+            if (divRef.current !== null) {
+                divRef.current.style.backgroundColor = isBgColor;
+            }
+            await api.put(`/board/${board_id}`, { title, custom: { background: isBgColor } });
         } catch (err: any) {
             toast.error(err.message)
         }
     }
 
-    function changeBackground() {
-        console.log(document.body.style.background)
-        document.body.style.backgroundColor = color;
-    }
-
-        
     return (
-        <div className="board-container">
+        <div className="board-container" ref={divRef}>
+            {isLoading &&
+                <LoadingBar
+                    color='#f11946'
+                    progress={100}
+                />
+                // <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open>
+                //     <CircularProgress color="inherit" />
+                // </Backdrop>
+            }
             <div className="board-header">
                 <Link to={'/'}>
                     <button type="button" className="back-home-button">Додому</button>
                 </Link>
                 <div className="board-title">
-                    {isMouseEnter && <input type="text" defaultValue={title} name="title" onBlur={handleBlur} onChange={handleChange} onKeyDown={handleKeyDown} onFocus={e => e.target.select()} autoFocus />}
+                    {isMouseEnter &&
+                        <input
+                            type="text"
+                            defaultValue={title}
+                            name="title"
+                            onBlur={() => setIsMouseEnter(false)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => changeTitleBoard(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            onFocus={e => e.target.select()}
+                            autoFocus
+                        />}
                     {!isMouseEnter &&
                         <h1
                             onClick={() => setIsMouseEnter(true)}>
@@ -126,16 +181,27 @@ export const Board = () => {
                 </div>
                 <div className="icon-edit">
                     {/* <img src={IconEdit} alt="edit" /> */}
-                    <input name="color" type="color" value={color} onChange={e => { setColor(e.target.value) }} onBlur={(e) => changeBackgroundColor(color)}></input>
+                    <input
+                        name="color"
+                        type="color"
+                        value={isBgColor}
+                        onChange={e => { setIsBgColor(e.target.value) }}
+                        onBlur={(e) => changeBackgroundColor(isBgColor)}
+                    ></input>
                 </div>
             </div>
             <div className="lists-container">
                 <div className="lists">
-                    {isLoading && <h1>Завантаження даних...</h1> }
-                    {error && <h1>{error}</h1>}
                     {lists && lists.map((list) => (
                         <div key={list.id}>
-                            <List key={list.id} id={list.id} title={list.title} cards={list.cards} changeTitle={changeTitleList} />
+                            <List
+                                key={list.id}
+                                id={list.id}
+                                title={list.title}
+                                cards={list.cards}
+                                changeTitle={changeTitle}
+                                createCard={handleAdd}
+                                deleteCard={handleDelete} />
                             <button type="button" onClick={() => handleDelete(list.id)}>Delete List</button>
                         </div>
                     ))}

@@ -1,4 +1,4 @@
-@import '../my-app/src/_styles';
+@import '../my-app/src/common/_styles';
 
 .list-container{
     display: flex;
@@ -49,6 +49,7 @@ ul {
 
 ul div{
     height: 30px;
+    width: 100%;
     // border: 1px solid white
 }
 

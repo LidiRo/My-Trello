@@ -1,7 +1,13 @@
-@import '../my-app/src/_styles';
+@import '../my-app/src/common/_styles';
 
 body{
     background-color: $primary-color-background;
+    // height: 100vh;
+}
+
+.board-container{
+    background-color: $primary-color-background;
+    height: 100vh;
 }
 
 .board-header{

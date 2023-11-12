@@ -1,40 +1,26 @@
 import React, { useState } from 'react'
 import './CreateNewList.scss'
-import IconClose from '../../../../../images/icon-close.png'
+import IconClose from '../../../../../common/images/icone-close.svg'
 
 interface NewList {
-    createList: (title: string) => void
+    createList: (title: string, namePage: string) => void
 }
 
 const CreateNewList = (props: NewList) => {
     const [inputValues, setInputValues] = useState('');
     const [isInputVisible, setIsInputVisible] = useState(false);
-    const onClose = () => setIsInputVisible(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        props.createList(inputValues);
+        props.createList(inputValues, "list");
         setIsInputVisible(false);
-    }
-
-    const handleChange = async (e: any) => {
-        const newTitle = e.target.value;
-        setInputValues(newTitle);
     }
 
     const handleKeyDown = (e: any) => {
         if (e.key === "Enter") {
-            props.createList(inputValues);
+            props.createList(inputValues, "list");
             setIsInputVisible(false);
         }
-    }
-
-    const handleClick = () => {
-        setIsInputVisible(true);
-    }
-
-    const handleBlur = () => {
-        setIsInputVisible(false);
     }
 
     return (
@@ -44,11 +30,18 @@ const CreateNewList = (props: NewList) => {
                     <form onSubmit={handleSubmit}>
                         <div className='create-new-list-modal-body'>
                             <label>
-                                <input type="text" className='create-new-list-modal-input' onChange={handleChange} onKeyDown={handleKeyDown} onBlur={handleBlur} autoFocus/>
+                                <input
+                                    type="text"
+                                    className='create-new-list-modal-input'
+                                    onChange={(e) => setInputValues(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                    onBlur={() => setIsInputVisible(false)}
+                                    autoFocus
+                                />
                             </label>
                             <div>
                                 <button type='submit' className='create-new-list-modal-button'>Додати список</button>
-                                <span className='create-new-list-modal-close' onClick={onClose}>
+                                <span className='create-new-list-modal-close' onClick={() => setIsInputVisible(false)}>
                                     <img src={IconClose} alt="close" />
                                 </span>
                             </div>
@@ -57,7 +50,9 @@ const CreateNewList = (props: NewList) => {
                 </div>
             }
             {!isInputVisible &&
-                <button type="button" className="add-list-button" onClick={handleClick}>+Додати список</button>}
+                <button type="button" className="add-list-button" onClick={() => setIsInputVisible(true)}>
+                    +Додати список
+                </button>}
         </div>
     )
 }

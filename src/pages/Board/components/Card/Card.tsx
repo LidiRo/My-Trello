@@ -5,7 +5,7 @@ export const Card = (props: {
     id: number;
     listId: number;
     title: string;
-    changeTitle: (title: string, id: number | undefined, list_id: number | undefined) => void;
+    changeTitle: (title: string, id: number | undefined, list_id: number | undefined, namePage?: string) => void;
     deleteCard: (id: number | undefined, list_id: number | undefined) => void;
 }) => {
     const [isMouseEnter, setIsMouseEnter] = useState(false);
@@ -17,7 +17,7 @@ export const Card = (props: {
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
         if (newTitle !== undefined) {
-            props.changeTitle(newTitle, props.id, props.listId)
+            props.changeTitle(newTitle, props.listId, props.id, "card")
         }
     }
 

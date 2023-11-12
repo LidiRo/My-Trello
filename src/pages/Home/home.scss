@@ -1,4 +1,15 @@
-@import '../my-app/src/_styles';
+@import '../my-app/src/common/_styles';
+
+.loading{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
 
 .home-title {
     font-family: $primary-font-family;
@@ -52,12 +63,26 @@
     margin-bottom: 35px;
     margin-right: 20px;
     // margin-left: 20px;
-    border: 1px solid rgba(165, 203, 203, 0.7);
-    background-color: rgba(165, 203, 203, 0.5);
+    // border: 1px solid rgba(165, 203, 203, 0.7);
+    // background-color: rgba(165, 203, 203, 0.5);
+    background-color: #D4E2EE;
 }
 
-.board-home-container:hover {
-    background-color: rgba(120, 182, 182, 0.5);
+.link:hover .board-home-container-fade {
+    // background-color: rgba(120, 182, 182, 0.5);
+    background-color: #00000020;
+}
+
+.board-home-container-fade{
+    width: 250px;
+    height: 150px;
+    border-radius: 15px;
+    background-color: #00000010;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0
 }
 
 .home-button-delete{
