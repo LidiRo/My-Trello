@@ -1,12 +1,11 @@
 import { useState } from "react";
 import IconDelete from "../../../../../common/images/icon-delete-2.png"
-
+import "./CreateNewCard.scss"
 
 interface NewCard {
-    createCard: (
-        title: string,
-    ) => void;
     listId: number
+    createCard: (title: string) => void;
+    deleteList: (id: number | undefined, namePage?: string) => void;
 }
 
 const CreateNewCard = (props: NewCard) => {
@@ -43,12 +42,20 @@ const CreateNewCard = (props: NewCard) => {
             }
             {!isTextareaVisible &&
                 <div className="add-card-button-container">
-                    <button type="button" className="add-card-button" onClick={() => setIsTextareaVisible(true)}>
+                    <div>
+                        <button type="button" className="add-card-button" onClick={() => setIsTextareaVisible(true)}>
                         +Додати картку
                     </button>
-                    <span className="del-card-button">
-                        <img src={IconDelete} alt="close" />
-                    </span>
+                    </div>
+                    <div className="card-button-delete" onClick={() => props.deleteList(props.listId, "list")}>
+                        <img className="card-button-delete-icon" src={IconDelete} alt="del" />
+                        <span className="tooltiptext-card" title="Натисніть, щоб видалити дошку">
+                            Натисніть, щоб видалити дошку
+                        </span>
+                    </div>
+                    {/* <span className="del-card-button">
+                        <img src={IconDelete} alt="del" />
+                    </span> */}
                 </div>
                 }
         </div>

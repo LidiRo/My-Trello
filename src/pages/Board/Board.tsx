@@ -11,6 +11,8 @@ import instance from "../../api/request";
 // import CircularProgress from '@mui/material/CircularProgress';
 import LoadingBar from "react-top-loading-bar";
 import { ICard } from "../../common/interfaces/ICard";
+import IconMenu from "../../common/images/icon-menu.svg"
+import IconClose from "../../common/images/icone-close.svg"
 
 
 const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
@@ -23,11 +25,11 @@ export const Board = (): ReactElement => {
     const [isBgColor, setIsBgColor] = useState<string>("#D4E2EE");
     const [isMouseEnter, setIsMouseEnter] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
 
     const divRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-
         const fetchData = async (): Promise<void> => {
             try {
                 const board: { title: string, lists: IList[], custom?: { background: string } } = await instance.get(`/board/${board_id}`);
@@ -118,12 +120,12 @@ export const Board = (): ReactElement => {
     const changeTitle = async (title: string, list_id: number | undefined, card_id?: number | undefined, namePage?: string) => {
         if (title !== "" && PATTERN.test(title)) {
             try {
-                if (namePage === "card") { 
+                if (namePage === "card") {
                     await instance.put(`/board/${board_id}/card/${card_id}`, { title: title, list_id });
                 } else {
                     await instance.put(`/board/${board_id}/list/${list_id}`, { title: title });
                 }
-                
+
                 const board: { lists: IList[] } = await instance.get(`/board/${board_id}`);
                 if (board.lists !== undefined) {
                     setLists(board.lists);
@@ -136,7 +138,6 @@ export const Board = (): ReactElement => {
 
     const changeBackgroundColor = async (backgroundColor: string) => {
         try {
-            console.log("bgColor", backgroundColor);
             if (divRef.current !== null) {
                 divRef.current.style.backgroundColor = isBgColor;
             }
@@ -161,9 +162,10 @@ export const Board = (): ReactElement => {
                 <Link to={'/'}>
                     <button type="button" className="back-home-button">Додому</button>
                 </Link>
-                <div className="board-title">
+                <div className="board-title-container">
                     {isMouseEnter &&
                         <input
+                            className="board-title-input"
                             type="text"
                             defaultValue={title}
                             name="title"
@@ -174,20 +176,43 @@ export const Board = (): ReactElement => {
                             autoFocus
                         />}
                     {!isMouseEnter &&
-                        <h1
-                            onClick={() => setIsMouseEnter(true)}>
-                            {title}
-                        </h1>}
+                        <div className="board-title">
+                            <h1 onClick={() => setIsMouseEnter(true)}>{title}</h1>
+                        </div>
+                        }
                 </div>
-                <div className="icon-edit">
-                    {/* <img src={IconEdit} alt="edit" /> */}
-                    <input
-                        name="color"
-                        type="color"
-                        value={isBgColor}
-                        onChange={e => { setIsBgColor(e.target.value) }}
-                        onBlur={(e) => changeBackgroundColor(isBgColor)}
-                    ></input>
+                <div className="board-menu">
+                    {!isMenuVisible &&
+                        <div className="board-menu-icon">
+                            <img src={IconMenu} alt="Menu" className="button-menu" onClick={() => setIsMenuVisible(true)} />
+                        </div>
+                    }
+                    {isMenuVisible &&
+                        <div className="board-menu-form">
+                            <div className="board-menu-header">
+                                <h2>Меню</h2>
+                                <img src={IconClose} alt="Close" onClick={() => setIsMenuVisible(false)} />
+                            </div>
+
+                            <div className="border-change-background">
+                                <div className="input-change-background">
+                                    <input
+                                        name="color"
+                                        type="color"
+                                        value={isBgColor}
+                                        onChange={e => { setIsBgColor(e.target.value) }}
+                                    ></input>
+                                    <span className="tooltiptext-change-background" title="Натисніть, щоб обрати колір">
+                                        Натисніть, щоб обрати колір
+                                    </span>
+                                </div>
+                                <button className="button-change-background" type="button" onClick={(e) => {
+                                    changeBackgroundColor(isBgColor);
+                                    setIsMenuVisible(false);
+                                }}>Змінити фон</button>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
             <div className="lists-container">
@@ -201,8 +226,8 @@ export const Board = (): ReactElement => {
                                 cards={list.cards}
                                 changeTitle={changeTitle}
                                 createCard={handleAdd}
-                                deleteCard={handleDelete} />
-                            <button type="button" onClick={() => handleDelete(list.id)}>Delete List</button>
+                                deleteCard={handleDelete}
+                                deleteList={handleDelete} />
                         </div>
                     ))}
                 </div>

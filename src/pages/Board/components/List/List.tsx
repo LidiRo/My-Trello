@@ -11,6 +11,7 @@ export const List = (props: {
     changeTitle: (title: string, list_id: number | undefined, card_id?: number | undefined, namePage?: string) => void;
     createCard: (title: string, namePage: string, list_id?: number, cards?: ICard[]) => void;
     deleteCard: (id: number | undefined, namePage?: string) => void;
+    deleteList: (id: number | undefined, namePage?: string) => void;
 }) => {
     const [isMouseEnter, setIsMouseEnter] = useState(false);
 
@@ -50,21 +51,25 @@ export const List = (props: {
             <div className="cards-container">
                 <ul className="cards">
                     {props.cards && props.cards.map(el =>
-                        <Card
-                            key={el.id}
-                            id={el.id}
-                            listId={Number(props.id)}
-                            title={el.title}
-                            changeTitle={props.changeTitle}
-                            deleteCard={() => props.deleteCard(el.id, "card")}
-                        />
+                        <li className="card">
+                            <Card
+                                key={el.id}
+                                id={el.id}
+                                listId={Number(props.id)}
+                                title={el.title}
+                                changeTitle={props.changeTitle}
+                                deleteCard={() => props.deleteCard(el.id, "card")}
+                            />
+                        </li>
+
                     )}
                 </ul>
             </div>
             <div className="add-card-button-container">
                 <CreateNewCard
-                    createCard={(title: string) => props.createCard(title, "card", props.id, props.cards)}
                     listId={Number(props.id)}
+                    createCard={(title: string) => props.createCard(title, "card", props.id, props.cards)}
+                    deleteList={props.deleteList}
                 />
             </div>
         </div>);
