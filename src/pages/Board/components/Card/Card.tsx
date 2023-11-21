@@ -38,6 +38,18 @@ export const Card = (props: {
         setIsCardMenu(false);
     }
 
+    // const draggables = document.querySelectorAll('.card-title');
+
+    // console.log(draggables)
+
+    // const containers = document.querySelectorAll('.cards');
+
+    // draggables.forEach(draggable => {
+    //     draggable.addEventListener('dragstart', () => {
+    //         console.log('drag start')
+    //     })
+    // })
+
     return (
         <div className="card-container">
             {isMouseEnter &&
@@ -53,7 +65,24 @@ export const Card = (props: {
             }
             {!isMouseEnter &&
                 <div className="card-title-block">
-                    <div onClick={handleClickTitle}>
+                    <div
+                        className="card-title"
+                        // draggable="true"
+                        // onDragStart={(e: any) => {
+                        //     e.target.classList.add("dragging");
+                        //     e.dataTransfer.setData("Text", e.target.className)
+                        // }}
+                        // onDragEnd={(e: any) => { e.target.classList.remove("dragging") }}
+                        // onDragLeave={(e: any) => {
+                        // }}
+                        // onDragOver={(e: any) => {
+                        //     e.preventDefault();
+                        // }}
+                        // onDrop={(e: any) => {
+
+                        // }}
+                        onClick={handleClickTitle}
+                    >
                         {props.title}
                     </div>
                     {!isCardMenu &&

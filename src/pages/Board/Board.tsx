@@ -15,7 +15,7 @@ import IconMenu from "../../common/images/icon-menu.svg"
 import IconClose from "../../common/images/icone-close.svg"
 
 
-const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
+const PATTERN = new RegExp(/^[0-9a-zA-Zа-яА-ЯіІ\s\-_.]+$/i);
 
 export const Board = (): ReactElement => {
     let { board_id } = useParams();

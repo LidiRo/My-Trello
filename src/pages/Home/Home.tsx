@@ -12,7 +12,7 @@ import instance from "../../api/request";
 import api from '../../api/request';
 
 
-const PATTERN = new RegExp(/^[0-9A-ZА-ЯЁ\s\-_.]+$/i);
+const PATTERN = new RegExp(/^[0-9a-zA-Zа-яА-ЯіІ\s\-_.]+$/i);
 
 export const Home = (): ReactElement => {
     

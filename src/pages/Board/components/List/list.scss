@@ -46,7 +46,15 @@
     margin-bottom: 10px;
 }
 
+.cards-container.hovered{
+    // border: 1px solid red;
+}
 
+.cards {
+    // background-color: rgba(128, 0, 128, 0.749);
+    // height: 100%;
+    min-height: 10px;
+}
 
 ul {
     width: 180px;
@@ -60,20 +68,20 @@ ul div{
     // border: 1px solid white
 }
 
-.card-title{
-    width: 180px;
-    height: 30px;
-    text-align: left;
-    border: 1px solid $color-border;
-    margin-bottom: 15px;
-    padding-left: 5px;
-    border-radius: $border-radius;
-    background-color: $primary-color-card;
-    color: $primary-font-color;
-    font-family: $primary-font-family;
-    font-size: $text-font-size;
-    background-color: #f3f3f3;
-}
+// .card-title{
+//     width: 180px;
+//     height: 30px;
+//     text-align: left;
+//     border: 1px solid $color-border;
+//     margin-bottom: 15px;
+//     padding-left: 5px;
+//     border-radius: $border-radius;
+//     background-color: $primary-color-card;
+//     color: $primary-font-color;
+//     font-family: $primary-font-family;
+//     font-size: $text-font-size;
+//     background-color: #f3f3f3;
+// }
 
 .card{
     list-style-type: none;
@@ -84,11 +92,27 @@ ul div{
     padding-right: 5px;
 }
 
+.dragging {
+    opacity: 0.5;
+    // border: 1px solid green;
+}
+
+.dragover{
+    background: #000000;
+}
+
 .card:hover{
     cursor: pointer;
     background-color: rgba(199, 199, 199, 0.521)
 }
 
+.card.dragging:active{
+    // opacity: 0,5;
+}
+
+// .card.dragging :where(.card-container){
+//     opacity: 0, 5;
+// } 
 
 .card-title-block{
     display: flex;
