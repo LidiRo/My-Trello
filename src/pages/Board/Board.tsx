@@ -145,7 +145,9 @@ export const Board = (): ReactElement => {
         } catch (err: any) {
             toast.error(err.message)
         }
-    }
+    } 
+
+    console.log("lists: ", lists)
 
     return (
         <div className="board-container" ref={divRef}>

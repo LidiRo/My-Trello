@@ -4,34 +4,27 @@ import { Link } from "react-router-dom";
 import { BoardHome } from "./components/BoardHome/BoardHome";
 import { Modal } from "./components/Modal/Modal";
 import IconDelete from "../../common/images/icon-delete-2.png"
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-import { IBoard } from "../../common/interfaces/IBoard";
-import toast from "react-hot-toast";
-import instance from "../../api/request";
+// import Backdrop from '@mui/material/Backdrop';
+// import CircularProgress from '@mui/material/CircularProgress';
+import { Toaster } from "react-hot-toast";
 import api from '../../api/request';
+import { useTypedSelector } from "../../hooks/useTypeSelecor";
+import { useActions } from "../../hooks/useAction";
+import LoadingBar from "react-top-loading-bar";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { fetchBoards } from "../../store/reducers/ActionCreators";
 
+export const Home : React.FC = (): ReactElement => {
 
-const PATTERN = new RegExp(/^[0-9a-zA-Zа-яА-ЯіІ\s\-_.]+$/i);
-
-export const Home = (): ReactElement => {
-    
-    const [boards, setBoards] = useState<IBoard[]>([]);
     const [isModal, setModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    // const { boards } = useTypedSelector(state => state.board);
+    const dispatch = useAppDispatch();
+    const {boards} = useAppSelector(state => state.boards)
+
+    // const {fetchBoards, postBoard, deleteBoard} = useActions();
 
     useEffect(() => {
-        const fetchData = async (): Promise<void> => {
-            try {
-                const board: { boards: IBoard[] } = await instance.get('/board'); 
-                if (board.boards !== undefined) {
-                    setBoards(board.boards);
-                }
-            } catch (err: any) {
-                toast.error(err.message);
-            }
-        }
-
         api.interceptors.request.use((config: any) => {
             setIsLoading(true);
             return config;
@@ -41,28 +34,18 @@ export const Home = (): ReactElement => {
             return response;
         });
 
-        fetchData();
+        dispatch(fetchBoards());
     }, [])
 
     const handleAdd = async (title: string) => {
-        if (title !== "" && PATTERN.test(title)) {
-            await instance.post('/board', { title: title});
-        }
-        const board: { boards: IBoard[] } = await instance.get('/board');
-        if (board.boards !== undefined) {
-            setBoards(board.boards);
-        }
+        // await postBoard(title);
+        fetchBoards();
         setModal(false);
     }
 
     const handleDelete = async (id: number | undefined) => {
-        if (id !== undefined) {
-            await instance.delete(`/board/${id}`);
-            const board: { boards: IBoard[] } = await instance.get('/board');
-            if (board.boards !== undefined) {
-                setBoards(board.boards);
-            }
-        }
+        // await deleteBoard(id);
+        fetchBoards();
     }
 
     const handleClick = async (e: React.FormEvent) => {
@@ -74,10 +57,16 @@ export const Home = (): ReactElement => {
         <div className="home-container">
             <h1 className="home-title">Мої дошки</h1>
             <div className="home-boards-section">
-                {isLoading &&
+                {/* {isLoading &&
                     <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open>
                         <CircularProgress color="inherit" />
                     </Backdrop>
+                } */}
+                {isLoading &&
+                    <LoadingBar
+                        color='#f11946'
+                        progress={100}
+                    />
                 }
                 <ul className="home-boards-section-list">
                     {boards &&
@@ -113,6 +102,7 @@ export const Home = (): ReactElement => {
                     createBoard={handleAdd}
                 />
             }
+            <Toaster />
         </div>
     )
 }

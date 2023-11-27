@@ -9,6 +9,9 @@ export const Card = (props: {
     changeTitle: (title: string, id: number | undefined, list_id: number | undefined, namePage?: string) => void;
     deleteCard: (id: number | undefined, list_id: number | undefined) => void;
 }) => {
+
+    console.log("listId", props.listId + " card title: ", props.title)
+
     const [isMouseEnter, setIsMouseEnter] = useState(false);
     const [isCardMenu, setIsCardMenu] = useState(false);
 
