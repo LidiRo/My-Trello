@@ -1,17 +1,15 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { combineReducers } from "redux";
-import boardReducer from "./reducers/BoardSlice"
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import boardsReducer from "./reducers/BoardSlice"
+import { apiSlice } from "./reducers/apiSlice";
 
-const rootReducer = combineReducers({
-    boards: boardReducer
-});
-
-export const setupStore = () => configureStore({
+export const store = configureStore({
     reducer: {
-        boards: boardReducer
-    }
+        boards: boardsReducer,
+        [apiSlice.reducerPath]: apiSlice.reducer
+    },
+    middleware: getDefaultMiddleware => 
+        getDefaultMiddleware().concat(apiSlice.middleware)
 })
 
-export type RootState = ReturnType<typeof rootReducer>;
-export type AppStore = ReturnType<typeof setupStore>;
-export type AppDispatch = AppStore['dispatch'];
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
