@@ -10,7 +10,7 @@ export const Card = (props: {
     deleteCard: (id: number | undefined, list_id: number | undefined) => void;
 }) => {
 
-    console.log("listId", props.listId + " card title: ", props.title)
+    // console.log("listId", props.listId + " card title: ", props.title)
 
     const [isMouseEnter, setIsMouseEnter] = useState(false);
     const [isCardMenu, setIsCardMenu] = useState(false);

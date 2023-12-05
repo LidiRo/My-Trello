@@ -7,41 +7,40 @@ import IconDelete from "../../common/images/icon-delete-2.png"
 import { Toaster } from "react-hot-toast";
 import LoadingBar from "react-top-loading-bar";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { addNewBoard, deleteBoard, fetchBoards } from "../../store/reducers/ActionCreators";
-import { useGetBoardsQuery } from "../../store/reducers/apiSlice";
+import { fetchBoards, addNewBoard, deleteBoard } from "../../store/action-creators/BoardsActionCreators";
+import api from '../../api/request';
 
 export const Home: React.FC = (): ReactElement => {
-
-    const {
-        data: boards = [],
-        isLoading,
-        isSuccess,
-        isError,
-        error
-    } = useGetBoardsQuery();
-    console.log("isLoading", isLoading);
-    console.log("isSuccess", isSuccess);
-    console.log("boards", boards);
-
-    const [isModal, setModal] = useState(false);
+    const PATTERN = new RegExp(/^[0-9a-zA-Zа-яА-ЯіІєЄїЇ\s\-_.]+$/i);
     const dispatch = useAppDispatch();
-    const { status } = useAppSelector(state => state.boards);
+    const [isModal, setModal] = useState(false);
+    const { boards } = useAppSelector(state => state.boards);
+    const [isLoading, setIsLoading] = useState(false);
 
-    // useEffect(() => {
-    //     if (status === 'idle') {
-    //         dispatch(fetchBoards());
-    //     }
-        
-    // }, [dispatch, status])
+    useEffect(() => {
+        api.interceptors.request.use((config: any) => {
+            setIsLoading(true);
+            return config;
+        });
+        api.interceptors.response.use((response: any) => {
+            setIsLoading(false);
+            return response;
+        });
+        dispatch(fetchBoards());
+    }, [dispatch])
 
     const handleAdd = async (title: string) => {
-        await dispatch(addNewBoard(title)).unwrap();
+        if (title !== "" && PATTERN.test(title)) {
+            await dispatch(addNewBoard(title));
+        }
         dispatch(fetchBoards());
         setModal(false);
     }
 
     const handleDelete = async (id: number | undefined) => {
-        await dispatch(deleteBoard(id)).unwrap();
+        if (id !== undefined) {
+            await dispatch(deleteBoard(id));
+        }
         dispatch(fetchBoards());
     }
 
@@ -50,7 +49,7 @@ export const Home: React.FC = (): ReactElement => {
         setModal(true);
     }
 
-    if (status === 'loading') {
+    if (isLoading) {
         return (
             <LoadingBar
                 color='#f11946'

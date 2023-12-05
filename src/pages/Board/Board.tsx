@@ -3,49 +3,32 @@ import { Link, useParams } from 'react-router-dom';
 import './board.scss';
 import { List } from "./components/List/List";
 import CreateNewList from "./components/List/CreateNewList/CreateNewList";
-import api from '../../api/request';
 import toast, { Toaster } from 'react-hot-toast';
-import { IList } from "../../common/interfaces/IList";
-import instance from "../../api/request";
 // import Backdrop from '@mui/material/Backdrop';
 // import CircularProgress from '@mui/material/CircularProgress';
 import LoadingBar from "react-top-loading-bar";
 import { ICard } from "../../common/interfaces/ICard";
 import IconMenu from "../../common/images/icon-menu.svg"
 import IconClose from "../../common/images/icone-close.svg"
-
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { addNewCard, deleteCard, editTitleCard } from "../../store/action-creators/CardsActionCreators";
+import { fetchLists, editTitleBoard, addNewList, deleteList, editTitleList, editBackground } from "../../store/action-creators/ListsActionCreators";
+import api from '../../api/request';
 
 const PATTERN = new RegExp(/^[0-9a-zA-Zа-яА-ЯіІ\s\-_.]+$/i);
 
 export const Board = (): ReactElement => {
-    let { board_id } = useParams();
-
-    const [lists, setLists] = useState<IList[]>([]);
-    const [title, setTitle] = useState('');
-    const [isBgColor, setIsBgColor] = useState<string>("#D4E2EE");
-    const [isMouseEnter, setIsMouseEnter] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
-
     const divRef = useRef<HTMLDivElement | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isMouseEnter, setIsMouseEnter] = useState(false);
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const { lists, title, custom } = useAppSelector(state => state.lists);
+    const [isBgColor, setIsBgColor] = useState<string>(custom?.background ? custom.background : "#D4E2EE");
+
+    let { board_id } = useParams();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const fetchData = async (): Promise<void> => {
-            try {
-                const board: { title: string, lists: IList[], custom?: { background: string } } = await instance.get(`/board/${board_id}`);
-                if (board.lists !== undefined) {
-                    setLists(board.lists);
-                }
-                setTitle(board.title);
-                if (board.custom?.background && divRef.current !== null) {
-                    divRef.current.style.backgroundColor = board.custom.background;
-                    setIsBgColor(board.custom.background)
-                }
-            } catch (err: any) {
-                toast.error(err.message);
-            }
-        }
-
         api.interceptors.request.use((config: any) => {
             setIsLoading(true);
             return config;
@@ -54,9 +37,12 @@ export const Board = (): ReactElement => {
             setIsLoading(false);
             return response;
         });
-
-        fetchData();
-    }, [])
+        dispatch(fetchLists(Number(board_id)));
+        if (custom?.background && divRef.current !== null) {
+            divRef.current.style.backgroundColor = custom.background;
+            setIsBgColor(custom.background)
+        }
+    }, [dispatch, board_id, custom?.background])
 
     const handleKeyDown = (e: any) => {
         if (e.key === "Enter") {
@@ -66,14 +52,9 @@ export const Board = (): ReactElement => {
 
     const changeTitleBoard = async (title: string) => {
         if (title !== "" && PATTERN.test(title)) {
-            try {
-                await instance.put(`/board/${board_id}`, { title: title });
-                const board: { title: string } = await instance.get(`/board/${board_id}`);
-                setTitle(board.title);
-            } catch (err: any) {
-                toast.error(err.message)
-            }
+            await dispatch(editTitleBoard({ board_id: Number(board_id), title: title }));
         }
+        await dispatch(fetchLists(Number(board_id)));
     }
 
     const handleAdd = async (title: string, namePage: string, list_id?: number, cards?: ICard[]) => {
@@ -81,17 +62,12 @@ export const Board = (): ReactElement => {
             if (title !== "" && PATTERN.test(title)) {
                 if (namePage === "list") {
                     const position = lists?.length ? lists.length + 1 : 1;
-                    await instance.post(`/board/${board_id}/list`, { title, position });
+                    await dispatch(addNewList({ board_id: Number(board_id), title: title, position: position }));
                 } else {
                     const position = cards?.length ? cards.length + 1 : 1;
-                    const card = { title: title, list_id: list_id, position: position };
-                    await instance.post(`/board/${board_id}/card`, card);
+                    await dispatch(addNewCard({ board_id: Number(board_id), card: { title: title, list_id: Number(list_id), position: position } }))
                 }
-
-                const board: { lists: IList[] } = await instance.get(`/board/${board_id}`);
-                if (board.lists !== undefined) {
-                    setLists(board.lists);
-                }
+                await dispatch(fetchLists(Number(board_id)));
             }
         } catch (err: any) {
             toast.error(err.message);
@@ -102,15 +78,11 @@ export const Board = (): ReactElement => {
         try {
             if (id !== undefined) {
                 if (namePage === "card") {
-                    await instance.delete(`/board/${board_id}/card/${id}`);
+                    await dispatch(deleteCard({ board_id: Number(board_id), list_id: id }));
                 } else {
-                    await instance.delete(`/board/${board_id}/list/${id}`);
+                    await dispatch(deleteList({ board_id: Number(board_id), list_id: id }));
                 }
-
-                const board: { lists: IList[] } = await instance.get(`/board/${board_id}`);
-                if (board.lists !== undefined) {
-                    setLists(board.lists);
-                }
+                await dispatch(fetchLists(Number(board_id)));
             }
         } catch (err: any) {
             toast.error(err.message)
@@ -121,15 +93,11 @@ export const Board = (): ReactElement => {
         if (title !== "" && PATTERN.test(title)) {
             try {
                 if (namePage === "card") {
-                    await instance.put(`/board/${board_id}/card/${card_id}`, { title: title, list_id });
+                    await dispatch(editTitleCard({ board_id: Number(board_id), card_id: Number(card_id), list_id: Number(list_id), title: title }));
                 } else {
-                    await instance.put(`/board/${board_id}/list/${list_id}`, { title: title });
+                    await dispatch(editTitleList({ board_id: Number(board_id), list_id: Number(list_id), title: title }));
                 }
-
-                const board: { lists: IList[] } = await instance.get(`/board/${board_id}`);
-                if (board.lists !== undefined) {
-                    setLists(board.lists);
-                }
+                await dispatch(fetchLists(Number(board_id)));
             } catch (err: any) {
                 toast.error(err.message)
             }
@@ -141,13 +109,11 @@ export const Board = (): ReactElement => {
             if (divRef.current !== null) {
                 divRef.current.style.backgroundColor = isBgColor;
             }
-            await api.put(`/board/${board_id}`, { title, custom: { background: isBgColor } });
+            await dispatch(editBackground({ board_id: Number(board_id), custom: { background: isBgColor }, title: title, color: isBgColor }))
         } catch (err: any) {
             toast.error(err.message)
         }
-    } 
-
-    console.log("lists: ", lists)
+    }
 
     return (
         <div className="board-container" ref={divRef}>
@@ -181,7 +147,7 @@ export const Board = (): ReactElement => {
                         <div className="board-title">
                             <h1 onClick={() => setIsMouseEnter(true)}>{title}</h1>
                         </div>
-                        }
+                    }
                 </div>
                 <div className="board-menu">
                     {!isMenuVisible &&

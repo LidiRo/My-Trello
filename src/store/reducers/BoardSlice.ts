@@ -1,9 +1,9 @@
-import { createSlice} from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IBoard } from "../../common/interfaces/IBoard";
 import toast from "react-hot-toast";
-import { addNewBoard, deleteBoard, fetchBoards } from "./ActionCreators";
+import { fetchBoards, addNewBoard, deleteBoard } from "../action-creators/BoardsActionCreators";
 
-interface BoardState{
+interface BoardState {
     boards: IBoard[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string;
@@ -19,27 +19,35 @@ export const boardSlice = createSlice({
     name: 'boards',
     initialState,
     reducers: {},
-    extraReducers(builder) {
-        builder
-            .addCase(fetchBoards.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(fetchBoards.fulfilled, (state, action) => {
-                state.status = 'succeeded';
-                state.boards = action.payload;
-            })
-            .addCase(fetchBoards.rejected, (state, action) => {
+    extraReducers: {
+        [fetchBoards.fulfilled.type]: (state, action: PayloadAction<IBoard[]>) => {
+            state.status = 'succeeded';
+            state.boards = action.payload;
+        },
+        [fetchBoards.rejected.type]: (state, action) => {
+            if (action.error.message) {
                 state.status = 'failed';
-                if (action.error.message) {
-                    state.error = toast.error(action.error.message);
-                }
-            })
-            .addCase(addNewBoard.fulfilled, (state) => { 
-                return state;
-            })
-            .addCase(deleteBoard.fulfilled, (state) => { 
-                return state;
-            })
+                state.error = toast.error(action.error.message);
+            }
+        },
+        [addNewBoard.fulfilled.type]: (state) => {
+            return state;
+        },
+        [addNewBoard.rejected.type]: (state, action) => {
+            if (action.error.message) {
+                state.status = 'failed';
+                state.error = toast.error(action.error.message);
+            }
+        },
+        [deleteBoard.fulfilled.type]: (state) => {
+            return state;
+        },
+        [deleteBoard.rejected.type]: (state, action) => {
+            if (action.error.message) {
+                state.status = 'failed';
+                state.error = toast.error(action.error.message);
+            }
+        },
     }
 });
 
