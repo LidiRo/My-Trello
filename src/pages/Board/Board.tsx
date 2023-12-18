@@ -25,10 +25,12 @@ export const Board = (): ReactElement => {
     const { lists, title, custom } = useAppSelector(state => state.lists);
     const [isBgColor, setIsBgColor] = useState<string>(custom?.background ? custom.background : "#D4E2EE");
 
+    
     let { board_id } = useParams();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
+        // console.log("title", title, " - isBgColor 1", isBgColor)
         api.interceptors.request.use((config: any) => {
             setIsLoading(true);
             return config;
@@ -39,9 +41,11 @@ export const Board = (): ReactElement => {
         });
         dispatch(fetchLists(Number(board_id)));
         if (custom?.background && divRef.current !== null) {
+            // console.log("title", title, " - custom.background", custom.background)
             divRef.current.style.backgroundColor = custom.background;
             setIsBgColor(custom.background)
         }
+        // console.log("title", title, " - isBgColor 2", isBgColor)
     }, [dispatch, board_id, custom?.background])
 
     const handleKeyDown = (e: any) => {
@@ -57,15 +61,16 @@ export const Board = (): ReactElement => {
         await dispatch(fetchLists(Number(board_id)));
     }
 
-    const handleAdd = async (title: string, namePage: string, list_id?: number, cards?: ICard[]) => {
+    const handleAdd = async (title: string, namePage: string, list_id?: number, cards?: ICard[], position?: number) => {
         try {
             if (title !== "" && PATTERN.test(title)) {
                 if (namePage === "list") {
                     const position = lists?.length ? lists.length + 1 : 1;
                     await dispatch(addNewList({ board_id: Number(board_id), title: title, position: position }));
                 } else {
-                    const position = cards?.length ? cards.length + 1 : 1;
-                    await dispatch(addNewCard({ board_id: Number(board_id), card: { title: title, list_id: Number(list_id), position: position } }))
+                    // const position = cards?.length ? cards.length + 1 : 1;
+                    if (position !== undefined)
+                        await dispatch(addNewCard({ board_id: Number(board_id), card: { title: title, list_id: Number(list_id), position: position } }))
                 }
                 await dispatch(fetchLists(Number(board_id)));
             }
@@ -116,90 +121,95 @@ export const Board = (): ReactElement => {
     }
 
     return (
-        <div className="board-container" ref={divRef}>
+        <div className="board-main-content" ref={divRef}>
             {isLoading &&
                 <LoadingBar
                     color='#f11946'
                     progress={100}
                 />
-                // <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open>
-                //     <CircularProgress color="inherit" />
-                // </Backdrop>
             }
             <div className="board-header">
-                <Link to={'/'}>
-                    <button type="button" className="back-home-button">Додому</button>
-                </Link>
-                <div className="board-title-container">
-                    {isMouseEnter &&
-                        <input
-                            className="board-title-input"
-                            type="text"
-                            defaultValue={title}
-                            name="title"
-                            onBlur={() => setIsMouseEnter(false)}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => changeTitleBoard(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            onFocus={e => e.target.select()}
-                            autoFocus
-                        />}
-                    {!isMouseEnter &&
-                        <div className="board-title">
-                            <h1 onClick={() => setIsMouseEnter(true)}>{title}</h1>
+                <div className="board-header-conteiner">
+                    <span className="board-back-home">
+                        <Link to={'/'}>
+                            <button className="board-back-home-button" type="button">
+                                Дошки
+                            </button>
+                        </Link>
+                    </span>
+                    <span className="board-name">
+                        <div className="board-name-conteiner">
+                            {isMouseEnter &&
+                                <input
+                                    className="board-name-input"
+                                    type="text"
+                                    defaultValue={title}
+                                    name="title"
+                                    onBlur={() => setIsMouseEnter(false)}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => changeTitleBoard(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                    onFocus={e => e.target.select()}
+                                    autoFocus
+                                />
+                            }
+                            {!isMouseEnter &&
+                                <h1 className="board-name-display" onClick={() => setIsMouseEnter(true)}>{title}</h1>
+                            }
                         </div>
-                    }
-                </div>
-                <div className="board-menu">
-                    {!isMenuVisible &&
-                        <div className="board-menu-icon">
-                            <img src={IconMenu} alt="Menu" className="button-menu" onClick={() => setIsMenuVisible(true)} />
-                        </div>
-                    }
-                    {isMenuVisible &&
-                        <div className="board-menu-form">
-                            <div className="board-menu-header">
-                                <h2>Меню</h2>
-                                <img src={IconClose} alt="Close" onClick={() => setIsMenuVisible(false)} />
-                            </div>
-
-                            <div className="border-change-background">
-                                <div className="input-change-background">
-                                    <input
-                                        name="color"
-                                        type="color"
-                                        value={isBgColor}
-                                        onChange={e => { setIsBgColor(e.target.value) }}
-                                    ></input>
-                                    <span className="tooltiptext-change-background" title="Натисніть, щоб обрати колір">
-                                        Натисніть, щоб обрати колір
-                                    </span>
+                    </span>
+                    <span className="board-menu">
+                        {!isMenuVisible &&
+                            <button className="board-menu-button" type="button" onClick={() => setIsMenuVisible(true)}>
+                                <img src={IconMenu} alt="Menu" className="board-menu-button-icon"  />
+                            </button>
+                        }
+                        {isMenuVisible &&
+                            <div className="board-menu-form">
+                                <div className="board-menu-header">
+                                    <h2>Меню</h2>
+                                    <img src={IconClose} alt="Close" onClick={() => setIsMenuVisible(false)} />
                                 </div>
-                                <button className="button-change-background" type="button" onClick={(e) => {
-                                    changeBackgroundColor(isBgColor);
-                                    setIsMenuVisible(false);
-                                }}>Змінити фон</button>
+                                <div className="border-change-background">
+                                    <div className="input-change-background">
+                                        <input
+                                            name="color"
+                                            type="color"
+                                            value={isBgColor}
+                                            onChange={e => { setIsBgColor(e.target.value) }}
+                                        ></input>
+                                        <span className="tooltiptext-change-background" title="Натисніть, щоб обрати колір">
+                                            Натисніть, щоб обрати колір
+                                        </span>
+                                    </div>
+                                    <button className="button-change-background" type="button" onClick={(e) => {
+                                        changeBackgroundColor(isBgColor);
+                                        setIsMenuVisible(false);
+                                    }}>Змінити фон</button>
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </span>
                 </div>
             </div>
-            <div className="lists-container">
-                <div className="lists">
-                    {lists && lists.map((list) => (
-                        <div key={list.id}>
-                            <List
-                                key={list.id}
-                                id={list.id}
-                                title={list.title}
-                                cards={list.cards}
-                                changeTitle={changeTitle}
-                                createCard={handleAdd}
-                                deleteCard={handleDelete}
-                                deleteList={handleDelete} />
-                        </div>
-                    ))}
+            <div className="board-canvas">
+                <div className="list-container">
+                    <ol className="lists">
+                        {lists && lists.map((list) => (
+                            <li className="list-wrapper" key={list.id}>
+                                <List
+                                    key={list.id}
+                                    id={list.id}
+                                    title={list.title}
+                                    cards={list.cards}
+                                    changeTitle={changeTitle}
+                                    createCard={handleAdd}
+                                    deleteCard={handleDelete}
+                                    deleteList={handleDelete} />
+                            </li>
+                        ))}
+                        <CreateNewList createList={handleAdd} />
+                    </ol>
                 </div>
-                <CreateNewList createList={handleAdd} />
             </div>
             <Toaster />
         </div>

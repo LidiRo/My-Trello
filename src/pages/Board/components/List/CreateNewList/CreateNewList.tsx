@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './CreateNewList.scss'
+import IconPlus from '../../../../../common/images/icon-plus.png'
 import IconClose from '../../../../../common/images/icone-close.svg'
 
 interface NewList {
@@ -24,35 +25,44 @@ const CreateNewList = (props: NewList) => {
     }
 
     return (
-        <div className="create-new-list-container">
+        <div className="list-composer-button-container">
+            {!isInputVisible &&
+                <button className="list-composer-button" type="button"  onClick={() => setIsInputVisible(true)}>
+                    <span className='add-button'>
+                        <img src={IconPlus} alt="Plus" className="add-button-icon" />
+                    </span>
+                    Додати список
+                </button>
+            }
             {isInputVisible &&
-                <div className='create-new-list-modal-dialog' onClick={e => { e.stopPropagation() }}>
-                    <form onSubmit={handleSubmit}>
-                        <div className='create-new-list-modal-body'>
-                            <label>
-                                <input
-                                    type="text"
-                                    className='create-new-list-modal-input'
-                                    onChange={(e) => setInputValues(e.target.value)}
-                                    onKeyDown={handleKeyDown}
-                                    onBlur={() => setIsInputVisible(false)}
-                                    autoFocus
-                                />
-                            </label>
-                            <div>
-                                <button type='submit' className='create-new-list-modal-button'>Додати список</button>
-                                <span className='create-new-list-modal-close' onClick={() => setIsInputVisible(false)}>
-                                    <img src={IconClose} alt="close" />
+                <div className='list-composer-form-conteiner'>
+                    <form className='list-composer-form' onSubmit={handleSubmit}>
+                        <textarea
+                            className='list-name-textarea'
+                            spellCheck='false'
+                            maxLength={512}
+                            dir='auto'
+                            autoComplete='off'
+                            name='Увести назву списку...'
+                            placeholder='Увести назву списку...'
+                            onChange={(e) => setInputValues(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            // onBlur={() => setIsInputVisible(false)}
+                            autoFocus
+                        ></textarea>
+                        <div className='list-composer-buttons'>
+                            <button className='list-composer-add-list-button' type='submit'>
+                                Додати список
+                            </button>
+                            <button className='list-composer-cancel-button' type='button' onClick={() => setIsInputVisible(false)}>
+                                <span className='cancel-button'>
+                                    <img className='cancel-button-icon' src={IconClose} alt="close"  />
                                 </span>
-                            </div>
+                            </button>
                         </div>
                     </form>
                 </div>
             }
-            {!isInputVisible &&
-                <button type="button" className="add-list-button" onClick={() => setIsInputVisible(true)}>
-                    +Додати список
-                </button>}
         </div>
     )
 }

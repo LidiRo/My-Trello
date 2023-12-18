@@ -1,41 +1,54 @@
 @import '../my-app/src/common/_styles';
 
-body{
-    background-color: $primary-color-background;
-    // height: 100vh;
-}
-
-.board-container{
+.board-main-content{
     background-color: $primary-color-background;
     height: 100vh;
 }
 
-.board-header{
+.board-header-conteiner{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    height: auto;
+    padding: 25px 10px;
 }
 
-.board-title-container{
-    margin: 15px;
+.board-back-home{
+    margin: 0 15px;
 }
 
-.board-title-container h1{
+.board-back-home-button {
     cursor: pointer;
-    display: block;
+    height: 30px;
+    border-radius: $border-radius;
+    font-family: $primary-font-family;
+    font-size: $text-font-size;
+    background-color: $primary-color-button;
+    color: $font-color-button;
+}
+
+.board-back-home-button:hover{
+    background-color: rgb(40, 40, 143);
+}
+
+.board-name-display{
+    cursor: pointer;
     font-family: $primary-font-family;
     font-size: 42px;
     color: $primary-font-color;
     text-align: center;
-    margin: 10px 30px;
+    margin: 0;
+    padding: 0 10px;
 }
 
-.board-title:hover{
+.board-name-display:hover{
     background-color: rgba(94, 94, 94, 0.144);
     border-radius: $border-radius;
+    padding: 0 10px;
 }
 
-.board-title-input{
+.board-name-input{
     font-family: $primary-font-family;
     font-size: 42px;
     color: $primary-font-color;
@@ -43,32 +56,49 @@ body{
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    top: 15px;
 }
 
-.board-menu-icon{
-    cursor: pointer;
+.board-menu{
+    margin: 0 15px;
+}
+
+.board-menu,
+.board-menu-button,
+.board-menu-button-icon{
     width: 40px;
     height: 40px;
 }
 
-.board-menu {
-    margin-right: 50px;
-    margin-top: 40px;
+.board-menu-button{
+    border: none;
+    padding: 0;
+    cursor: pointer;
 }
 
-// .button-menu{
-//     width: 55px;
-//     height: 30px;
-//     border-radius: $border-radius;
-//     text-align: left;
-//     font-family: $primary-font-family;
-//     font-size: $text-font-size;
-//     background-color: $primary-color-button;
-//     color: $font-color-button;
-// }
+.lists{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-left: 50px;
+    position: fixed;
+    top: 120px;
+}
 
-.board-menu-form{
+.list-wrapper{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid $color-border;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    width: 200px;
+    height: 100%;
+    border-radius: $border-radius;
+    background: $primary-color-list;
+}
+
+.board-menu-form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -76,11 +106,11 @@ body{
     background-color: rgba(255, 255, 255, 0.545);
     border: 1px solid rgba(112, 112, 112, 0.51);
     border-radius: $border-radius;
-    // position: absolute;
-    // right: 0%;
+    position: absolute;
+    right: 2%;
 }
 
-.board-menu-header{
+.board-menu-header {
     width: 100%;
     position: relative;
     text-align: center;
@@ -90,7 +120,7 @@ body{
     // justify-content: space-between;
 }
 
-.board-menu-header h2{
+.board-menu-header h2 {
     // width: 100%;
     flex: 1;
     margin: 10px;
@@ -108,11 +138,11 @@ body{
 
 }
 
-.board-menu-header img:hover{
+.board-menu-header img:hover {
     background-color: rgba(94, 94, 94, 0.144);
 }
 
-.border-change-background{
+.border-change-background {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -121,7 +151,7 @@ body{
     margin-bottom: 20px;
 }
 
-.tooltiptext-change-background{
+.tooltiptext-change-background {
     visibility: hidden;
     width: 300px;
     background-color: rgb(218, 218, 218);
@@ -134,11 +164,11 @@ body{
     right: 50%;
 }
 
-.input-change-background{
+.input-change-background {
     position: relative;
 }
 
-.input-change-background input{
+.input-change-background input {
     cursor: pointer;
 }
 
@@ -146,7 +176,7 @@ body{
     visibility: visible;
 }
 
-.button-change-background{
+.button-change-background {
     cursor: pointer;
     width: 100px;
     height: 30px;
@@ -160,49 +190,6 @@ body{
     // margin-bottom: 20px;
 }
 
-.button-change-background:hover{
+.button-change-background:hover {
     background-color: rgb(40, 40, 143);
-}
-
-.lists-container{
-    display: flex;
-    flex-direction: row;
-    margin-left: 50px;
-    position: fixed;
-    top: 120px;
-    
-}
-
-.lists{
-    display: flex;
-    flex-direction: row;
-}
-
-.lists-textarea{
-    width: 192px;
-    height: 70px;
-}
-
-.add-list-button, .back-home-button {
-    cursor: pointer;
-    width: 200px;
-    height: 30px;
-    border-radius: $border-radius;
-    text-align: left;
-    font-family: $primary-font-family;
-    font-size: $text-font-size;
-    background-color: $primary-color-button;
-    color: $font-color-button;
-}
-
-.add-list-button:hover,
-.back-home-button:hover{
-    background-color: rgb(40, 40, 143);
-}
-
-.back-home-button {
-    width: 75px;
-    margin-left: 50px;
-    position: fixed;
-    top: 40px;
 }

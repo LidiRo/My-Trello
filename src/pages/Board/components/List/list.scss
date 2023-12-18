@@ -1,17 +1,17 @@
 @import '../my-app/src/common/_styles';
 
-.list-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 1px solid $color-border;
-    margin-right: 20px;
-    width: 200px;
-    // height: 400px;
-    // height: 100%;
-    border-radius: $border-radius;
-    background: $primary-color-list;
-}
+// .list-container{
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     border: 1px solid $color-border;
+//     margin-right: 20px;
+//     width: 200px;
+//     // height: 400px;
+//     // height: 100%;
+//     border-radius: $border-radius;
+//     background: $primary-color-list;
+// }
 
 .list-title h2 {
     width: 180px;
@@ -53,7 +53,13 @@
 .cards {
     // background-color: rgba(128, 0, 128, 0.749);
     // height: 100%;
-    min-height: 10px;
+    // min-height: 10px;
+}
+
+.slot{
+    background-color: #b8b8b8e8;
+    border-radius: $border-radius;
+    margin-bottom: 5px;
 }
 
 ul {
@@ -64,7 +70,9 @@ ul {
 
 ul div{
     height: 30px;
-    width: 100%;
+    // margin-bottom: 5px;
+    // padding-left: 3px;
+    // padding-right: 5px;
     // border: 1px solid white
 }
 
@@ -83,18 +91,27 @@ ul div{
 //     background-color: #f3f3f3;
 // }
 
+li {
+    list-style-type: none;
+}
+
 .card{
     list-style-type: none;
     background-color: rgba(243, 243, 243, 0.521);
     border-radius: $border-radius;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
     padding-left: 3px;
     padding-right: 5px;
 }
 
 .dragging {
     opacity: 0.5;
+    // display: none;
     // border: 1px solid green;
+}
+
+.disappear{
+    display: none;
 }
 
 .dragover{

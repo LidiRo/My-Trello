@@ -1,46 +1,117 @@
 @import '../my-app/src/common/_styles';
 
-.create-new-list-modal-dialog {
-    width: 100%;
-    height: 110px;
-    max-width: 240px;
-    background: white;
-    text-align: left;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.create-new-list-modal-close img {
+.list-composer-button {
     cursor: pointer;
-    width: 20px;
-    margin-left: 5px;
-    vertical-align: bottom;
+    width: 200px;
+    height: 30px;
+    border-radius: $border-radius;
+    text-align: left;
+    font-family: $primary-font-family;
+    font-size: $text-font-size;
+    background-color: $primary-color-button;
+    color: $font-color-button;
+    border: none;
 }
 
-.create-new-list-modal-body {
+.list-composer-button:hover {
+    background-color: rgb(40, 40, 143);
+}
+
+.add-button-icon{
+    width: 12px;
+    height: 12px;
+    margin: 0 8px;
+}
+
+.list-composer-form-conteiner{
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    align-items: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width: 200px;
+    background: $primary-color-list;
+    border-radius: $border-radius;
+    border: 1px solid $color-border;
 }
 
-.create-new-list-modal-body div{
+.list-name-textarea{
+    width: 180px;
+    height: 30px;
+    resize: none;
+    margin: 15px 0;
+    border-radius: $border-radius;
+}
+
+.list-composer-buttons{
     display: flex;
     flex-direction: row;
-    align-items: center;
+    margin-bottom: 15px;
 }
 
-.create-new-list-modal-input {
-    width: 192px;
-    margin-bottom: 20px;
-}
-
-.create-new-list-modal-button {
+.list-composer-add-list-button {
     width: 130px;
-    border: 1px solid rgba(165, 203, 203, 0.7);
-    background-color: rgba(165, 203, 203, 0.5);
-    border-radius: 5px;
+    height: 30px;
+    border-radius: $border-radius;
     font-family: $primary-font-family;
-    font-size: 20px;
-    color: $primary-font-color;
+    font-size: $text-font-size;
+    background-color: $primary-color-button;
+    border: none;
+    color: $font-color-button;
 }
+
+.list-composer-cancel-button{
+    width: 20px;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+}
+
+.cancel-button-icon{
+    cursor: pointer;
+    width: 20px;
+    // vertical-align: bottom;
+}
+
+// .create-new-list-modal-dialog {
+//     width: 100%;
+//     height: 110px;
+//     max-width: 240px;
+//     background: white;
+//     text-align: left;
+//     display: flex;
+//     flex-direction: column;
+//     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+// }
+
+// .create-new-list-modal-close img {
+//     cursor: pointer;
+//     width: 20px;
+//     margin-left: 5px;
+//     vertical-align: bottom;
+// }
+
+// .create-new-list-modal-body {
+//     display: flex;
+//     flex-direction: column;
+//     padding: 1rem;
+// }
+
+// .create-new-list-modal-body div{
+//     display: flex;
+//     flex-direction: row;
+//     align-items: center;
+// }
+
+// .create-new-list-modal-input {
+//     width: 192px;
+//     margin-bottom: 20px;
+// }
+
+// .create-new-list-modal-button {
+//     width: 130px;
+//     border: 1px solid rgba(165, 203, 203, 0.7);
+//     background-color: rgba(165, 203, 203, 0.5);
+//     border-radius: 5px;
+//     font-family: $primary-font-family;
+//     font-size: 20px;
+//     color: $primary-font-color;
+// }

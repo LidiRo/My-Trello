@@ -29,7 +29,7 @@ export const listSlice = createSlice({
             state.status = 'succeeded';
             state.title = title;
             state.lists = lists;
-            if (state.custom !== undefined) {
+            if (state.custom !== undefined && custom !== undefined) {
                 state.custom.background = custom.background;
             }
         },
