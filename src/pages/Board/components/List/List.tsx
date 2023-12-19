@@ -33,163 +33,243 @@ export const List = (props: {
         }
     }
 
-    const [isVisibleSlot, setIsVisibleSlot] = useState<Boolean[]>(cards.map(() => false));
-    // console.log("isVisibleSlot ", isVisibleSlot);
-    // useEffect(() => {
-    //     const containersCards = document.querySelectorAll('.cards');
-    //     containersCards.forEach((container: any) => {
-    //         container.addEventListener("dragover", (e: any) => {
-    //             e.preventDefault();
-    //             // const afterElement = getDragAfterElement(container, e.clientY)
-    //             // const draggable: any = document.querySelector('.dragging');
-    //             // if (draggable !== null) {
-    //             //     if (afterElement === null) {
-    //             //         container.appendChild(draggable)
-    //             //     } else {
-    //             //         container.insertBefore(draggable, afterElement);
-    //             //     }
-    //             // }
-    //         })
+    // const [isVisibleSlot, setIsVisibleSlot] = useState<Boolean[]>(cards.map(() => false));
+    // // console.log("isVisibleSlot ", isVisibleSlot);
+    // // useEffect(() => {
+    // //     const containersCards = document.querySelectorAll('.cards');
+    // //     containersCards.forEach((container: any) => {
+    // //         container.addEventListener("dragover", (e: any) => {
+    // //             e.preventDefault();
+    // //             // const afterElement = getDragAfterElement(container, e.clientY)
+    // //             // const draggable: any = document.querySelector('.dragging');
+    // //             // if (draggable !== null) {
+    // //             //     if (afterElement === null) {
+    // //             //         container.appendChild(draggable)
+    // //             //     } else {
+    // //             //         container.insertBefore(draggable, afterElement);
+    // //             //     }
+    // //             // }
+    // //         })
 
-    // container.addEventListener("drop", (e: any) => {
-    //     e.preventDefault();
-    // })
-    // })
+    // // container.addEventListener("drop", (e: any) => {
+    // //     e.preventDefault();
+    // // })
+    // // })
 
-    //     const getDragAfterElement = (container: any, y: number) => {
-    //         const draggableElements = [...container.querySelectorAll('.card:not(.dragging)')];
-    //         return draggableElements.reduce((closest: any, child: any) => {
-    //             const box = child.getBoundingClientRect();
-    //             const offset = y - box.top - box.height / 2;
-    //             if (offset < 0 && offset > closest.offset) {
-    //                 return { offset: offset, element: child }
-    //             } else {
-    //                 return closest;
-    //             }
-    //         }, { offset: Number.NEGATIVE_INFINITY }).element;
-    //     }
-    // }, [])
+    // //     const getDragAfterElement = (container: any, y: number) => {
+    // //         const draggableElements = [...container.querySelectorAll('.card:not(.dragging)')];
+    // //         return draggableElements.reduce((closest: any, child: any) => {
+    // //             const box = child.getBoundingClientRect();
+    // //             const offset = y - box.top - box.height / 2;
+    // //             if (offset < 0 && offset > closest.offset) {
+    // //                 return { offset: offset, element: child }
+    // //             } else {
+    // //                 return closest;
+    // //             }
+    // //         }, { offset: Number.NEGATIVE_INFINITY }).element;
+    // //     }
+    // // }, [])
 
-    let dragItem: any = null;
+    // let dragItem: any = null;
 
-    const handleDragStart = (e: any, index: number, card: ICard) => {
-        dragItem = e.target;
-        e.target.classList.add("dragging");
-        e.dataTransfer.setData("text/plain", e.target.innerHTML);
-        // console.log("Drag Start", dragItem)
-        // console.log("start card", card.position)
-        // console.log(cards[index])
-        // console.log(e.target.classList.contains("disappear"))
-        // setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
-        //     if (i === index) {
-        //         return isVisibleSlot[i] = true;
-        //     }
-        //     return false
-        // }))
-        // console.log("isVisibleSlot 1 ", isVisibleSlot);
+    // let slots = document.querySelectorAll('.slot');
+    // // console.log(slots)
+
+    // const handleDragStart = (e: any, index: number, card: ICard) => {
+    //     dragItem = e.target;
+    //     e.target.classList.add("dragging");
+    //     e.dataTransfer.setData("text/plain", e.target.innerHTML);
+    //     // console.log("Drag Start", dragItem)
+    //     // console.log("start card", card.position)
+    //     // console.log(cards[index])
+    //     // console.log(e.target.classList.contains("disappear"))
+    //     // setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
+    //     //     if (i === index) {
+    //     //         return isVisibleSlot[i] = true;
+    //     //     }
+    //     //     return false
+    //     // }))
+    //     // console.log("isVisibleSlot 1 ", isVisibleSlot);
         
-    }
+    // }
 
-    // let isVisibleItem: boolean = true;
+    // // let isVisibleItem: boolean = true;
     
-    // console.log("dragItem 0", dragItem)
-    const handleDragLeave = (e: any, index: number, card: ICard) => {
-        const currentItem: any = document.querySelector(".dragging");
-        // isVisibleItem = false;
-        // console.log(isVisibleItem)
-        if (currentItem) {
-            currentItem.classList.add("disappear")
-        }
-        // setIsVisibleSlot(isVisibleSlot.map(() => false))
-        // console.log("leave card", card)
+    // // console.log("dragItem 0", dragItem)
+    // const handleDragLeave = (e: any, index: number, card: ICard) => {
+    //     const currentItem: any = document.querySelector(".dragging");
+    //     // isVisibleItem = false;
+    //     // console.log(isVisibleItem)
+    //     if (currentItem) {
+    //         // currentItem.classList.add("disappear")
+    //     }
+    //     // setIsVisibleSlot(isVisibleSlot.map(() => false))
+    //     // console.log("leave card", card)
 
-        // setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
-        //     if (i === index) {
-        //         return isVisibleSlot[i] = true;
-        //     }
-        //     return false
-        // }))
+    //     // setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
+    //     //     if (i === index) {
+    //     //         return isVisibleSlot[i] = true;
+    //     //     }
+    //     //     return false
+    //     // }))
 
-        // dragItem.style.display = 'none';
-    }
+    //     // dragItem.style.display = 'none';
+    // }
 
-    const handleDragEnter = (e: any, index: number, card: ICard) => {
-        console.log(e.target)
-        // if (!e.target.hasAttribute("dragging")) {
+    // const handleDragEnter = (e: any, index: number, card: ICard) => {
+    //     // console.log(e.target)
+    //     // if (!e.target.hasAttribute("dragging")) {
             
-        // }
-        // setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
-        //     if (i === index) {
-        //         return isVisibleSlot[i] = true;
-        //     }
-        //     return false
-        // }))
-    }
+    //     // }
+    //     // setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
+    //     //     if (i === index) {
+    //     //         return isVisibleSlot[i] = true;
+    //     //     }
+    //     //     return false
+    //     // }))
+    // }
     
+
+    // const handleDragEnd = (e: any) => {
+    //     e.target.classList.remove("dragging");
+    //     // console.log("Drag End", dragItem)
+    //     // console.log("data2", e.dataTransfer.getData("text/plain"));
+    //     // dragItem = null;
+        
+    //     setIsVisibleSlot(isVisibleSlot.map(() => false))
+    //     // console.log("isVisibleSlot 2 ", isVisibleSlot);
+    // }
+
+    // const handleDragOver = (e: any, index: number) => {
+    //     e.preventDefault();
+    //     setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
+    //         if (i === index) {
+    //             return isVisibleSlot[i] = true;
+    //         }
+    //         return false
+    //     }))
+    //     // slots.forEach((slot: any, i: number) => {
+    //     //     if (i === index) {
+    //     //         slot.style.background = "#b8b8b8e8";
+    //     //     }
+    //     // })
+    // }
+
+    // const handleDrop = (e: any) => {
+    //     e.preventDefault();
+    //     setIsVisibleSlot(isVisibleSlot.map(() => false))
+
+    //     // console.log("Drop", dragItem)
+    //     // console.log("data2", e.dataTransfer.getData("text/plain"));
+    //     // console.log("Drag Drop", e.target)
+    //     // e.target.append(dragItem);
+    // }
+
+    // // let draggableItems = document.querySelectorAll('.card');
+
+    // // draggableItems.forEach((draggable: any, index: number) => {
+    // //     let indexItem: any;
+    // //     if (draggable.classList.contains("dragging")) {
+    // //         indexItem = index;
+    // //     }
+    // //     // let dragItem: any = null;
+    // //     draggable.addEventListener('dragstart', (e: any) => {
+    // //         // const indexItem = index;
+    // //         // console.log("dragstart");
+    // //         dragItem = e.target;
+    // //         e.target.classList.add("dragging");
+    // //         // console.log("Drag Start", dragItem)
+    // //         console.log(indexItem)
+    // //         setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
+    // //             if (i === indexItem) {
+    // //                 return isVisibleSlot[i] = true;
+    // //             }
+    // //             return false
+    // //         }))
+    // //         // console.log("isVisibleSlot 1 ", isVisibleSlot);
+    // //     });
+
+    // //     draggable.addEventListener('dragend', (e: any) => { 
+    // //         e.target.classList.remove("dragging");
+    // //         // console.log("Drag End", dragItem)
+    // //         dragItem = null;
+
+    // //         setIsVisibleSlot(isVisibleSlot.map(() => false))
+    // //         // console.log("isVisibleSlot 2 ", isVisibleSlot);
+    // //     })
+    // //     // console.log("dragItem 0", dragItem)
+
+    // //     draggable.addEventListener('dragleave', (e: any) => { 
+    // //         // console.log("Drag leave", dragItem)
+    // //         if (dragItem !== null) {
+    // //             // dragItem.style.display = 'none';
+    // //         }
+    // //     })
+    // // })
+
+    const containersCards = document.querySelectorAll('.cards-container');
+    // console.log("containersCards", containersCards);
+    const draggableCards = document.querySelectorAll('.card');
+    // console.log("draggableCards", draggableCards);
+
+    // draggableCards.forEach((draggable) => {
+    //     draggable.addEventListener('dragstart', (e: any) => {
+    //         console.log("draggable", draggable);
+    //     })
+    // })
+
+//************DRAGGIND CARD****************/
+    let dragged: any;
+    
+    const handleDragStart = (e: any, index: number, card: ICard) => {
+        // console.log("DragStart", e.target, '; index = ', index, 'title = ', card.title);
+        dragged = e.target;
+        e.target.classList.add('dragging');
+    }
 
     const handleDragEnd = (e: any) => {
-        e.target.classList.remove("dragging");
-        // console.log("Drag End", dragItem)
-        // console.log("data2", e.dataTransfer.getData("text/plain"));
-        // dragItem = null;
-        
-        setIsVisibleSlot(isVisibleSlot.map(() => false))
-        // console.log("isVisibleSlot 2 ", isVisibleSlot);
+        // console.log("DragEnd", e.target);
+        e.target.classList.remove('dragging');
     }
 
-    const handleDragOver = (e: any) => {
-        e.preventDefault();
+    //************CONTAINER****************/
+
+    const handleDragEnter = (e: any) => {
+        
+        if (e.target.classList.contains('cards')) {
+            console.log("DragEnter", e.target);
+            e.target.classList.add('dragover');
+        }
+    }
+
+    const handleDragLeave = (e: any) => {
+        
+        if (e.target.classList.contains('cards')) {
+            console.log("DragLeave", e.target);
+            e.target.classList.remove('dragover');
+        }
     }
 
     const handleDrop = (e: any) => {
         e.preventDefault();
-        // console.log("Drop", dragItem)
-        // console.log("data2", e.dataTransfer.getData("text/plain"));
-        // console.log("Drag Drop", e.target)
-        // e.target.append(dragItem);
+        
+        if (e.target.classList.contains('cards')) {
+            e.target.classList.remove('dragover');
+            if (dragged !== null) {
+                // e.target.appendChild(dragged);
+            }
+            console.log("Drop", e.target);
+            console.log("dragged", dragged);
+        }
     }
 
-    // let draggableItems = document.querySelectorAll('.card');
+    const handleDragOver = (e: any) => {
+        e.preventDefault();
 
-    // draggableItems.forEach((draggable: any, index: number) => {
-    //     let indexItem: any;
-    //     if (draggable.classList.contains("dragging")) {
-    //         indexItem = index;
-    //     }
-    //     // let dragItem: any = null;
-    //     draggable.addEventListener('dragstart', (e: any) => {
-    //         // const indexItem = index;
-    //         // console.log("dragstart");
-    //         dragItem = e.target;
-    //         e.target.classList.add("dragging");
-    //         // console.log("Drag Start", dragItem)
-    //         console.log(indexItem)
-    //         setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
-    //             if (i === indexItem) {
-    //                 return isVisibleSlot[i] = true;
-    //             }
-    //             return false
-    //         }))
-    //         // console.log("isVisibleSlot 1 ", isVisibleSlot);
-    //     });
-
-    //     draggable.addEventListener('dragend', (e: any) => { 
-    //         e.target.classList.remove("dragging");
-    //         // console.log("Drag End", dragItem)
-    //         dragItem = null;
-
-    //         setIsVisibleSlot(isVisibleSlot.map(() => false))
-    //         // console.log("isVisibleSlot 2 ", isVisibleSlot);
-    //     })
-    //     // console.log("dragItem 0", dragItem)
-
-    //     draggable.addEventListener('dragleave', (e: any) => { 
-    //         // console.log("Drag leave", dragItem)
-    //         if (dragItem !== null) {
-    //             // dragItem.style.display = 'none';
-    //         }
-    //     })
-    // })
+        if (e.target.classList.contains('cards')) {
+            console.log("DragOver", e.target);
+        }
+    }
 
 
 
@@ -214,17 +294,28 @@ export const List = (props: {
                     </h2>}
             </div>
             <div className="cards-container"
+                onDragEnter={(e: any) => handleDragEnter(e)}
+                onDragLeave={(e: any) => handleDragLeave(e)}
+                onDrop={(e: any) => { handleDrop(e) }}
                 onDragOver={(e: any) => { handleDragOver(e) }}
-                onDrop={(e: any) => { handleDrop(e) }}>
+            >
                 <ul
                     className="cards"
+                    // onDragEnter={(e: any) => handleDragEnter(e)}
+                    // onDragLeave={(e: any) => handleDragLeave(e)}
+                    // onDrop={(e: any) => { handleDrop(e) }}
+                    // onDragOver={(e: any) => { handleDragOver(e) }}
                 >
                     {cards &&
                         cards.map((card: ICard, index: number) => {
                             return (
                             <li
                                 key={card.id}
-                                // className="card"
+                                    className="slot"
+                                    // onDragEnter={(e: any) => handleDragEnter(e)}
+                                    // onDragLeave={(e: any) => handleDragLeave(e)}
+                                    // onDrop={(e: any) => { handleDrop(e) }}
+                                    // onDragOver={(e: any) => { handleDragOver(e) }}
                                 // draggable="true"
                                 // onDragStart={(e: any) => handleDragStart(e, index, card)}
                                 // onDragEnd={(e: any) => handleDragEnd(e)}
@@ -237,8 +328,14 @@ export const List = (props: {
                                         draggable="true"
                                         onDragStart={(e: any) => handleDragStart(e, index, card)}
                                         onDragEnd={(e: any) => handleDragEnd(e)}
-                                        onDragLeave={(e: any) => handleDragLeave(e, index, card)}
-                                        onDragEnter={(e:any) => handleDragEnter(e, index, card)}
+                                        // onDragEnter={(e: any) => handleDragEnter(e)}
+                                        // onDragLeave={(e: any) => handleDragLeave(e)}
+                                        // onDrop={(e: any) => { handleDrop(e) }}
+                                        // onDragOver={(e: any) => { handleDragOver(e) }}
+                                        // onDragLeave={(e: any) => handleDragLeave(e, index, card)}
+                                        // onDragEnter={(e: any) => handleDragEnter(e, index, card)}
+                                        // onDragOver={(e: any) => { handleDragOver(e, index) }}
+                                        // onDrop={(e: any) => { handleDrop(e) }}
                                     >
                                         <Card
                                             key={card.id}
@@ -249,9 +346,9 @@ export const List = (props: {
                                             deleteCard={() => props.deleteCard(card.id, "card")}
                                         />
                                     </div>
-                                    {isVisibleSlot[index] && 
+                                    {/* {isVisibleSlot[index] && 
                                     <div className="slot"> SLOT </div>
-                                    }
+                                    } */}
                             </li>
                             )
                         }

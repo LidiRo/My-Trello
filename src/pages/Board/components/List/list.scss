@@ -56,10 +56,18 @@
     // min-height: 10px;
 }
 
-.slot{
-    background-color: #b8b8b8e8;
+// .slot{
+//     background-color: #b8b8b8e8;
+//     border-radius: $border-radius;
+//     margin-bottom: 5px;
+// }
+
+.slot {
+    // background-color: #b8b8b8e8;
     border-radius: $border-radius;
     margin-bottom: 5px;
+    width: 180px;
+    height: 30px;
 }
 
 ul {
@@ -102,6 +110,7 @@ li {
     margin-bottom: 5px;
     padding-left: 3px;
     padding-right: 5px;
+    z-index: 100;
 }
 
 .dragging {
@@ -115,7 +124,7 @@ li {
 }
 
 .dragover{
-    background: #000000;
+    background: #a5cd64;
 }
 
 .card:hover{
