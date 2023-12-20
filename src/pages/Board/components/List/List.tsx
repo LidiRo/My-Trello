@@ -207,69 +207,100 @@ export const List = (props: {
     // //     })
     // // })
 
-    const containersCards = document.querySelectorAll('.cards-container');
-    // console.log("containersCards", containersCards);
+    const containersCards = document.querySelectorAll('.cards');
     const draggableCards = document.querySelectorAll('.card');
-    // console.log("draggableCards", draggableCards);
 
-    // draggableCards.forEach((draggable) => {
-    //     draggable.addEventListener('dragstart', (e: any) => {
-    //         console.log("draggable", draggable);
-    //     })
-    // })
+    draggableCards.forEach((draggable) => {
+        draggable.addEventListener('dragstart', dragStart);
+        draggable.addEventListener('dragend', dragEnd);
+    })
+
+    containersCards.forEach((container) => {
+        container.addEventListener('dragover', (e: any) => dragOver(e, container));
+        container.addEventListener('dragenter', dragEnter);
+        container.addEventListener('dragleave', dragLeave);
+        container.addEventListener('drop', dragDrop);
+    })
 
 //************DRAGGIND CARD****************/
-    let dragged: any;
     
-    const handleDragStart = (e: any, index: number, card: ICard) => {
-        // console.log("DragStart", e.target, '; index = ', index, 'title = ', card.title);
-        dragged = e.target;
+    function dragStart (e: any) {
         e.target.classList.add('dragging');
+        setTimeout(() => { e.target.classList.add('invisible')}, 0)
     }
 
-    const handleDragEnd = (e: any) => {
-        // console.log("DragEnd", e.target);
+    function dragEnd(e: any) {
         e.target.classList.remove('dragging');
+        e.target.classList.remove('invisible')
     }
 
     //************CONTAINER****************/
 
-    const handleDragEnter = (e: any) => {
-        
-        if (e.target.classList.contains('cards')) {
-            console.log("DragEnter", e.target);
-            e.target.classList.add('dragover');
-        }
-    }
-
-    const handleDragLeave = (e: any) => {
-        
-        if (e.target.classList.contains('cards')) {
-            console.log("DragLeave", e.target);
-            e.target.classList.remove('dragover');
-        }
-    }
-
-    const handleDrop = (e: any) => {
+    function dragOver(e: any, container:any) {
         e.preventDefault();
+        const afterElement = getDragAfterElement(container, e.clientY);
+        const draggable = document.querySelector('.dragging');
+        if (afterElement === null && draggable) {
+            container.appendChild(draggable);
+        } else {
+            container.insertBefore(draggable, afterElement);
+        }
         
-        if (e.target.classList.contains('cards')) {
-            e.target.classList.remove('dragover');
-            if (dragged !== null) {
-                // e.target.appendChild(dragged);
+        
+    }
+
+    function getDragAfterElement(container: any, y: number) {
+        const draggableElements = [...container.querySelectorAll('.card:not(.dragging)')];
+        return draggableElements.reduce((closest, child) => {
+            
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                // console.log(offset, closest.offset);
+                return { offset: offset, element: child };
+            } else {
+                return closest;
             }
-            console.log("Drop", e.target);
-            console.log("dragged", dragged);
-        }
+        }, {offset: Number.NEGATIVE_INFINITY}).element
     }
 
-    const handleDragOver = (e: any) => {
+
+
+
+
+    function dragEnter(e: any) {
         e.preventDefault();
-
-        if (e.target.classList.contains('cards')) {
-            console.log("DragOver", e.target);
-        }
+        e.target.classList.add('dragover');
+        // if (e.target.classList.contains('cards')) {
+        //     console.log("DragEnter", e.target);
+        //     e.target.classList.add('dragover');
+        // }
     }
+
+    function dragLeave(e: any) {
+        // console.log("DragLeave", e.target.classList);
+        e.target.classList.remove('dragover');
+        // setTimeout(() => { dragged.classList.add('invisible') }, 0)
+        // if (e.target.classList.contains('cards')) {
+            
+        //     e.target.classList.remove('dragover');
+        // }
+    }
+
+    function dragDrop(e: any) {
+        // e.preventDefault();
+        e.target.classList.remove('dragover');
+        // e.target.append(dragged);
+        // if (e.target.classList.contains('cards')) {
+        //     e.target.classList.remove('dragover');
+        //     if (dragged !== null) {
+        //         // e.target.appendChild(dragged);
+        //     }
+        //     console.log("Drop", e.target);
+        //     console.log("dragged", dragged);
+        // }
+    }
+
 
 
 
@@ -293,49 +324,22 @@ export const List = (props: {
                         {props.title}
                     </h2>}
             </div>
-            <div className="cards-container"
-                onDragEnter={(e: any) => handleDragEnter(e)}
-                onDragLeave={(e: any) => handleDragLeave(e)}
-                onDrop={(e: any) => { handleDrop(e) }}
-                onDragOver={(e: any) => { handleDragOver(e) }}
-            >
-                <ul
-                    className="cards"
-                    // onDragEnter={(e: any) => handleDragEnter(e)}
-                    // onDragLeave={(e: any) => handleDragLeave(e)}
-                    // onDrop={(e: any) => { handleDrop(e) }}
-                    // onDragOver={(e: any) => { handleDragOver(e) }}
-                >
+            <div className="cards-container">
+                
+
+
+                <ul className="cards">
                     {cards &&
                         cards.map((card: ICard, index: number) => {
                             return (
-                            <li
-                                key={card.id}
-                                    className="slot"
-                                    // onDragEnter={(e: any) => handleDragEnter(e)}
-                                    // onDragLeave={(e: any) => handleDragLeave(e)}
-                                    // onDrop={(e: any) => { handleDrop(e) }}
-                                    // onDragOver={(e: any) => { handleDragOver(e) }}
-                                // draggable="true"
-                                // onDragStart={(e: any) => handleDragStart(e, index, card)}
-                                // onDragEnd={(e: any) => handleDragEnd(e)}
-                                    
-                                >
+                                // <li
+                                //     key={card.id}
+                                //     className="drop-zone"
+                                // >
                                     <div
                                         key={card.id}
-                                        id="card"
                                         className="card"
                                         draggable="true"
-                                        onDragStart={(e: any) => handleDragStart(e, index, card)}
-                                        onDragEnd={(e: any) => handleDragEnd(e)}
-                                        // onDragEnter={(e: any) => handleDragEnter(e)}
-                                        // onDragLeave={(e: any) => handleDragLeave(e)}
-                                        // onDrop={(e: any) => { handleDrop(e) }}
-                                        // onDragOver={(e: any) => { handleDragOver(e) }}
-                                        // onDragLeave={(e: any) => handleDragLeave(e, index, card)}
-                                        // onDragEnter={(e: any) => handleDragEnter(e, index, card)}
-                                        // onDragOver={(e: any) => { handleDragOver(e, index) }}
-                                        // onDrop={(e: any) => { handleDrop(e) }}
                                     >
                                         <Card
                                             key={card.id}
@@ -346,10 +350,7 @@ export const List = (props: {
                                             deleteCard={() => props.deleteCard(card.id, "card")}
                                         />
                                     </div>
-                                    {/* {isVisibleSlot[index] && 
-                                    <div className="slot"> SLOT </div>
-                                    } */}
-                            </li>
+                                // </li>
                             )
                         }
                         )}
@@ -364,6 +365,99 @@ export const List = (props: {
             </div>
         </div>);
 }
+
+
+//     return (
+//         <div className="list-container">
+//             <div className="list-title">
+//                 {isMouseEnter &&
+//                     <input
+//                         type="text"
+//                         defaultValue={props.title}
+//                         name="title"
+//                         onBlur={() => setIsMouseEnter(false)}
+//                         onChange={handleChange}
+//                         onKeyDown={handleKeyDown}
+//                         onFocus={e => e.target.select()}
+//                         autoFocus
+//                     />
+//                 }
+//                 {!isMouseEnter &&
+//                     <h2 className="list-title" onClick={() => setIsMouseEnter(true)}>
+//                         {props.title}
+//                     </h2>}
+//             </div>
+//             <div className="cards-container"
+//                 // onDragEnter={(e: any) => handleDragEnter(e)}
+//                 // onDragLeave={(e: any) => handleDragLeave(e)}
+//                 // onDrop={(e: any) => { handleDrop(e) }}
+//                 // onDragOver={(e: any) => { handleDragOver(e) }}
+//             >
+//                 <ul
+//                     className="cards"
+//                     // onDragEnter={(e: any) => handleDragEnter(e)}
+//                     // onDragLeave={(e: any) => handleDragLeave(e)}
+//                     // onDrop={(e: any) => { handleDrop(e) }}
+//                     // onDragOver={(e: any) => { handleDragOver(e) }}
+//                 >
+//                     {cards &&
+//                         cards.map((card: ICard, index: number) => {
+//                             return (
+//                             <li
+//                                 key={card.id}
+//                                     className="slot"
+//                                     // onDragEnter={(e: any) => handleDragEnter(e)}
+//                                     // onDragLeave={(e: any) => handleDragLeave(e)}
+//                                     // onDrop={(e: any) => { handleDrop(e) }}
+//                                     // onDragOver={(e: any) => { handleDragOver(e) }}
+//                                 // draggable="true"
+//                                 // onDragStart={(e: any) => handleDragStart(e, index, card)}
+//                                 // onDragEnd={(e: any) => handleDragEnd(e)}
+                                    
+//                                 >
+//                                     <div
+//                                         key={card.id}
+//                                         id="card"
+//                                         className="card"
+//                                         draggable="true"
+//                                         // onDragStart={(e: any) => handleDragStart(e, index, card)}
+//                                         // onDragEnd={(e: any) => handleDragEnd(e)}
+//                                         // onDragEnter={(e: any) => handleDragEnter(e)}
+//                                         // onDragLeave={(e: any) => handleDragLeave(e)}
+//                                         // onDrop={(e: any) => { handleDrop(e) }}
+//                                         // onDragOver={(e: any) => { handleDragOver(e) }}
+//                                         // onDragLeave={(e: any) => handleDragLeave(e, index, card)}
+//                                         // onDragEnter={(e: any) => handleDragEnter(e, index, card)}
+//                                         // onDragOver={(e: any) => { handleDragOver(e, index) }}
+//                                         // onDrop={(e: any) => { handleDrop(e) }}
+//                                     >
+//                                         <Card
+//                                             key={card.id}
+//                                             id={card.id}
+//                                             listId={Number(props.id)}
+//                                             title={card.title}
+//                                             changeTitle={props.changeTitle}
+//                                             deleteCard={() => props.deleteCard(card.id, "card")}
+//                                         />
+//                                     </div>
+//                                     {/* {isVisibleSlot[index] && 
+//                                     <div className="slot"> SLOT </div>
+//                                     } */}
+//                             </li>
+//                             )
+//                         }
+//                         )}
+//                 </ul>
+//             </div>
+//             <div className="add-card-button-container">
+//                 <CreateNewCard
+//                     listId={Number(props.id)}
+//                     createCard={(title: string) => props.createCard(title, "card", props.id, cards, position)}
+//                     deleteList={props.deleteList}
+//                 />
+//             </div>
+//         </div>);
+// }
 
 
 
