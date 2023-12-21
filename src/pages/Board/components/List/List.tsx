@@ -33,7 +33,7 @@ export const List = (props: {
         }
     }
 
-    // const [isVisibleSlot, setIsVisibleSlot] = useState<Boolean[]>(cards.map(() => false));
+    const [isVisibleSlot, setIsVisibleSlot] = useState<boolean[]>(cards.map(() => false));
     // // console.log("isVisibleSlot ", isVisibleSlot);
     // // useEffect(() => {
     // //     const containersCards = document.querySelectorAll('.cards');
@@ -209,10 +209,20 @@ export const List = (props: {
 
     const containersCards = document.querySelectorAll('.cards');
     const draggableCards = document.querySelectorAll('.card');
+    
+    // console.log(draggableCards);
+    // console.log(cards);
+    
 
-    draggableCards.forEach((draggable) => {
-        draggable.addEventListener('dragstart', dragStart);
+    
+
+    draggableCards.forEach((draggable, index) => {
+        draggable.addEventListener('dragstart', (e: any) => dragStart(e, index));
         draggable.addEventListener('dragend', dragEnd);
+        // draggable.addEventListener('dragover', (e: any) => dragOver(e, draggable));
+        // draggable.addEventListener('dragenter', dragEnter);
+        // draggable.addEventListener('dragleave', dragLeave);
+        // draggable.addEventListener('drop', dragDrop);
     })
 
     containersCards.forEach((container) => {
@@ -223,28 +233,58 @@ export const List = (props: {
     })
 
 //************DRAGGIND CARD****************/
-    
-    function dragStart (e: any) {
-        e.target.classList.add('dragging');
-        setTimeout(() => { e.target.classList.add('invisible')}, 0)
+    let draggingCard:ICard | undefined;
+
+    function dragStart(e: any, index: number) {
+        // e.stopPropagation();
+        const draggingElement = e.currentTarget;
+        // const elementCoordinates = draggingElement.getBoundingClientRect();
+        
+        // if (draggingCard !== undefined) {
+            draggingCard = cards.find((card) => card.id === Number(draggingElement.id));
+        // }
+        
+        
+        console.log(draggingCard)
+
+        e.dataTransfer.setData('text/plaid', draggingElement.id)
+
+        // const dragImage = e.currentTarget;
+        // e.dataTransfer.setDragImage(dragImage, elementCoordinates.width / 2, elementCoordinates.height / 2)
+
+        setTimeout(() => {
+            draggingElement.classList.add('dragging');
+        })
+        // e.target.classList.add('dragging');
+        // console.log(e.target.querySelector('.card-title-block'))
+        // setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
+        //     if (i === index) {
+        //         return isVisibleSlot[i] = true;
+        //     }
+        //     return false
+        // }))
+        // setTimeout(() => { e.target.classList.add('invisible')}, 0)
     }
 
     function dragEnd(e: any) {
         e.target.classList.remove('dragging');
-        e.target.classList.remove('invisible')
+        // e.target.classList.remove('invisible')
+        // setIsVisibleSlot(isVisibleSlot.map(() => false))
     }
 
     //************CONTAINER****************/
 
     function dragOver(e: any, container:any) {
         e.preventDefault();
-        const afterElement = getDragAfterElement(container, e.clientY);
-        const draggable = document.querySelector('.dragging');
-        if (afterElement === null && draggable) {
-            container.appendChild(draggable);
-        } else {
-            container.insertBefore(draggable, afterElement);
-        }
+        // console.log("e.currentTarget", e.currentTarget)
+        // console.log("e.target", e.target)
+        // const afterElement = getDragAfterElement(container, e.clientY);
+        // const draggable = document.querySelector('.dragging');
+        // if (afterElement === null && draggable) {
+        //     container.appendChild(draggable);
+        // } else {
+        //     container.insertBefore(draggable, afterElement);
+        // }
         
         
     }
@@ -270,7 +310,10 @@ export const List = (props: {
 
     function dragEnter(e: any) {
         e.preventDefault();
-        e.target.classList.add('dragover');
+        // console.log(draggingCard);
+        if (!draggingCard) return;
+
+        // e.target.classList.add('dragover');
         // if (e.target.classList.contains('cards')) {
         //     console.log("DragEnter", e.target);
         //     e.target.classList.add('dragover');
@@ -278,8 +321,11 @@ export const List = (props: {
     }
 
     function dragLeave(e: any) {
+        if (!draggingCard) return;
+
+        
         // console.log("DragLeave", e.target.classList);
-        e.target.classList.remove('dragover');
+        // e.target.classList.remove('dragover');
         // setTimeout(() => { dragged.classList.add('invisible') }, 0)
         // if (e.target.classList.contains('cards')) {
             
@@ -289,7 +335,39 @@ export const List = (props: {
 
     function dragDrop(e: any) {
         // e.preventDefault();
-        e.target.classList.remove('dragover');
+        const box = e.currentTarget.getBoundingClientRect();
+        const centerBox = e.clientY - box.top - box.height / 2;
+        // if(draggingCard?.position)
+        // console.log(draggingCard.position)
+
+        if (centerBox < 0) {
+            setIsVisibleSlot(isVisibleSlot.map((slot: any, index: number) => {
+                if(draggingCard?.position){
+                    if (index === draggingCard.position - 1) {
+                        return true;
+                    }
+                }
+                return false
+            }))
+        } 
+
+        if (centerBox >= 0) {
+            setIsVisibleSlot(isVisibleSlot.map((slot: any, index: number) => {
+                if (draggingCard?.position) {
+                    if (index === draggingCard.position) {
+                        return true;
+                    }
+                }
+                return false
+            }))
+        }
+        // setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
+        //     if (i === index) {
+        //         return isVisibleSlot[i] = true;
+        //     }
+        //     return false
+        // }))
+        // e.target.classList.remove('dragover');
         // e.target.append(dragged);
         // if (e.target.classList.contains('cards')) {
         //     e.target.classList.remove('dragover');
@@ -332,12 +410,16 @@ export const List = (props: {
                     {cards &&
                         cards.map((card: ICard, index: number) => {
                             return (
-                                // <li
-                                //     key={card.id}
-                                //     className="drop-zone"
-                                // >
+                                <li
+                                    key={card.id}
+                                    className="drop-zone"
+                                >
+                                    {isVisibleSlot[index] &&
+                                    <div className="slot">SLOT</div>
+                                    }
                                     <div
-                                        key={card.id}
+                                    key={card.id}
+                                    id={`${card.id}`}
                                         className="card"
                                         draggable="true"
                                     >
@@ -345,12 +427,14 @@ export const List = (props: {
                                             key={card.id}
                                             id={card.id}
                                             listId={Number(props.id)}
-                                            title={card.title}
+                                        title={card.title}
+                                        index={index}
+                                        visibleSlot={isVisibleSlot[index]}
                                             changeTitle={props.changeTitle}
                                             deleteCard={() => props.deleteCard(card.id, "card")}
                                         />
                                     </div>
-                                // </li>
+                                </li>
                             )
                         }
                         )}

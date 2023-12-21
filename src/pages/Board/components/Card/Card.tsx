@@ -6,6 +6,8 @@ export const Card = (props: {
     id: number;
     listId: number;
     title: string;
+    index: number;
+    visibleSlot: boolean;
     changeTitle: (title: string, id: number | undefined, list_id: number | undefined, namePage?: string) => void;
     deleteCard: (id: number | undefined, list_id: number | undefined) => void;
 }) => {
@@ -41,6 +43,8 @@ export const Card = (props: {
         setIsCardMenu(false);
     }
 
+    
+
     // const draggables = document.querySelectorAll('.card-title');
 
     // console.log(draggables)
@@ -54,7 +58,8 @@ export const Card = (props: {
     // })
 
     return (
-        <div className="card-container">
+        <div className="card-container ">
+            {/* {props.visibleSlot && <div className="slot">SLOT</div>} */}
             {isMouseEnter &&
                 <input
                 type="text"
@@ -68,24 +73,7 @@ export const Card = (props: {
             }
             {!isMouseEnter &&
                 <div className="card-title-block">
-                    <div
-                        className="card-title"
-                        // draggable="true"
-                        // onDragStart={(e: any) => {
-                        //     e.target.classList.add("dragging");
-                        //     e.dataTransfer.setData("Text", e.target.className)
-                        // }}
-                        // onDragEnd={(e: any) => { e.target.classList.remove("dragging") }}
-                        // onDragLeave={(e: any) => {
-                        // }}
-                        // onDragOver={(e: any) => {
-                        //     e.preventDefault();
-                        // }}
-                        // onDrop={(e: any) => {
-
-                        // }}
-                        onClick={handleClickTitle}
-                    >
+                    <div className="card-title" onClick={handleClickTitle}>
                         {props.title}
                     </div>
                     {!isCardMenu &&
@@ -105,6 +93,7 @@ export const Card = (props: {
                     }
                 </div>
             }
+            
         </div>
     );
 }
