@@ -59,6 +59,7 @@ export const Board = (): ReactElement => {
             await dispatch(editTitleBoard({ board_id: Number(board_id), title: title }));
         }
         await dispatch(fetchLists(Number(board_id)));
+        
     }
 
     const handleAdd = async (title: string, namePage: string, list_id?: number, cards?: ICard[], position?: number) => {
