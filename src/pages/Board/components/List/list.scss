@@ -51,6 +51,7 @@
 }
 
 .cards {
+    padding: 0;
     // background-color: rgba(128, 0, 128, 0.749);
     // height: 100%;
     // min-height: 10px;
@@ -71,20 +72,27 @@
     height: 30px;
 }
 
-ul {
-    width: 180px;
-    padding: 0;
-    margin: 0;
+ol {
+    list-style: none;
+    // width: 180px;
+    // padding: 0;
+    // margin: 0;
 }
 
-ul div{
-    height: 30px;
+ol div{
+    // height: 30px;
     // margin-bottom: 5px;
     // padding-left: 3px;
     // padding-right: 5px;
     // border: 1px solid white
 }
-
+.list-card{
+    height: 30px;
+    margin-bottom: 5px;
+    padding-left: 3px;
+    padding-right: 5px;
+    // border: 1px solid white
+}
 // .card-title{
 //     width: 180px;
 //     height: 30px;
@@ -105,20 +113,26 @@ li {
 }
 
 .card{
-    list-style-type: none;
+    height: 30px;
     background-color: rgba(243, 243, 243, 0.521);
     border-radius: $border-radius;
     margin-bottom: 5px;
-    padding-left: 3px;
-    padding-right: 5px;
+    // padding-left: 3px;
+    // padding-right: 5px;
     z-index: 100;
 }
 
 .dragging {
     opacity: 0.5;
+    // cursor: move;
     // display: none;
     // border: 1px solid green;
 }
+
+.hidden-card{
+    display: none;
+}
+
 
 .disappear{
     display: none;
@@ -141,6 +155,28 @@ li {
     // opacity: 0,5;
 }
 
+.card-clot-after,
+.card-clot-before {
+    display: none;
+    height: 30px;
+    background-color: gray;
+    border-radius: $border-radius;
+    margin-bottom: 5px;
+    padding-left: 3px;
+    padding-right: 5px;
+}
+
+.slot-visible {
+    display: block;
+    height: 30px;
+    width: 100%;
+    background-color: gray;
+    border-radius: $border-radius;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    
+}
+
 // .card.dragging :where(.card-container){
 //     opacity: 0, 5;
 // } 
@@ -150,10 +186,16 @@ li {
     flex-direction: row;
     justify-content: space-between;
     position: relative;
+    height: 30px;
+    padding-left: 3px;
+}
+
+.card-title{
+    width: 100%;
 }
 
 .card-container input{
-    width: 180px;
+    width: 170px;
     font-family: $primary-font-family;
     font-size: $text-font-size;
     background: #f3f3f3;
@@ -169,6 +211,7 @@ li {
     align-self: center;
     width: 10px;
     height: 15px;
+    padding-right: 5px;
     cursor: pointer;
 }
 
