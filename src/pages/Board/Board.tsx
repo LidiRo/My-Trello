@@ -11,7 +11,7 @@ import { ICard } from "../../common/interfaces/ICard";
 import IconMenu from "../../common/images/icon-menu.svg"
 import IconClose from "../../common/images/icone-close.svg"
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { addNewCard, deleteCard, editTitleCard } from "../../store/action-creators/CardsActionCreators";
+import { addNewCard, deleteCard, editPositionCard, editTitleCard } from "../../store/action-creators/CardsActionCreators";
 import { fetchLists, editTitleBoard, addNewList, deleteList, editTitleList, editBackground } from "../../store/action-creators/ListsActionCreators";
 import api from '../../api/request';
 
@@ -71,6 +71,7 @@ export const Board = (): ReactElement => {
                 } else {
                     // const position = cards?.length ? cards.length + 1 : 1;
                     if (position !== undefined)
+                        
                         await dispatch(addNewCard({ board_id: Number(board_id), card: { title: title, list_id: Number(list_id), position: position } }))
                 }
                 await dispatch(fetchLists(Number(board_id)));
@@ -107,6 +108,19 @@ export const Board = (): ReactElement => {
             } catch (err: any) {
                 toast.error(err.message)
             }
+        }
+    }
+
+    const changePositionCards = async (position: number, list_id: number | undefined, card_id?: number | undefined, namePage?: string) => { 
+        try {
+            if (namePage === "card") {
+                await dispatch(editPositionCard({ board_id: Number(board_id), card_id: Number(card_id), list_id: Number(list_id), position: position }));
+            } else {
+                
+            }
+            await dispatch(fetchLists(Number(board_id)));
+        } catch (err: any) {
+            toast.error(err.message)
         }
     }
 
@@ -205,6 +219,7 @@ export const Board = (): ReactElement => {
                                     changeTitle={changeTitle}
                                     createCard={handleAdd}
                                     deleteCard={handleDelete}
+                                    changePositionCards={changePositionCards}
                                     deleteList={handleDelete} />
                             </li>
                         ))}

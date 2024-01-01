@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICard } from "../../common/interfaces/ICard";
-import { addNewCard, deleteCard, editTitleCard } from "../action-creators/CardsActionCreators";
+import { addNewCard, deleteCard, editPositionCard, editTitleCard } from "../action-creators/CardsActionCreators";
 import toast from "react-hot-toast";
 
 interface CardState {
@@ -47,7 +47,9 @@ export const cardSlice = createSlice({
                 state.error = toast.error(action.error.message);
             }
         },
-        
+        [editPositionCard.fulfilled.type]: (state) => {
+            return state;
+        },
     }
 });
 

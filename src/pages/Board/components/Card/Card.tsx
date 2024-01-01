@@ -7,7 +7,7 @@ export const Card = (props: {
     listId: number;
     title: string;
     index: number;
-    visibleSlot: boolean;
+    // visibleSlot: boolean;
     changeTitle: (title: string, id: number | undefined, list_id: number | undefined, namePage?: string) => void;
     deleteCard: (id: number | undefined, list_id: number | undefined) => void;
 }) => {
@@ -58,7 +58,9 @@ export const Card = (props: {
     // })
 
     return (
-        <div className="card-container ">
+        <div
+            // className="card-container "
+        >
             {/* {props.visibleSlot && <div className="slot">SLOT</div>} */}
             {isMouseEnter &&
                 <input
