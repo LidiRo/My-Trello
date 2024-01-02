@@ -13,14 +13,18 @@ export const List = (props: {
     changeTitle: (title: string, list_id: number | undefined, card_id?: number | undefined, namePage?: string) => void;
     createCard: (title: string, namePage: string, list_id?: number, cards?: ICard[], position?: number) => void;
     deleteCard: (id: number | undefined, namePage?: string) => void;
-    changePositionCards: (position: number, list_id: number | undefined, card_id?: number | undefined, namePage?: string) => void;
+    changePositionCards: (list_id: number | undefined, cards: ICard[]) => void;
+    // changePositionCards: (position: number, list_id: number | undefined, card_id?: number | undefined, namePage?: string) => void;
     deleteList: (id: number | undefined, namePage?: string) => void;
 }) => {
     const dispatch = useAppDispatch();
-    const { cards } = props;
-    const position = cards?.length ? cards.length + 1 : 1;
+    // const { cards } = props;
+    const [cards, setCards] = useState<ICard[] | []>(props.cards)
 
-    const arrCards = [...cards];
+    // let arrCards = [...cards]
+    const position = cards?.length ? cards.length + 1 : 1;
+    // [...cards].sort((a: ICard, b: ICard) => a.position - b.position);
+
     const [isMouseEnter, setIsMouseEnter] = useState(false);
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>, namePage?: string) => {
@@ -38,6 +42,8 @@ export const List = (props: {
 
     const { draggingCard } = useAppSelector(state => state.slots)
 
+    const [isDraggindCard, setIsDraggingCard] = useState<ICard | null>(null);
+
     const [isDraggingElement, setIsDraggindElement] = useState<HTMLElement | null>(null);
 
     function dragStart(e: any, card: ICard) {
@@ -48,6 +54,7 @@ export const List = (props: {
             draggingElement.classList.add('dragging');
         }, 0)
         dispatch(dragStartReducer(card))
+
     }
 
     function dragEnd(e: any) {
@@ -67,8 +74,10 @@ export const List = (props: {
 
     function dragEnter(e: any, card: ICard) {
         e.preventDefault();
-
+        setIsDraggingCard(draggingCard);
         if (!draggingCard) return;
+
+        // console.log(isDraggindCard)
 
         const slotBefore = e.currentTarget.parentNode.querySelector('.card-clot-before');
         const slotAfter = e.currentTarget.parentNode.querySelector('.card-clot-after');
@@ -101,21 +110,44 @@ export const List = (props: {
 
     function dragDrop(e: any, card: ICard) {
         e.preventDefault();
-        // console.log("Drop", e.currentTarget.parentNode);
-        // console.log("isDraggingElement", isDraggingElement);
-        // isDraggingElement?.classList.remove('hidden-card');
-        // const newCard = isDraggingElement;
-        // e.currentTarget.parentNode.appendChild(newCard);
-        // console.log(draggingCard?.title)
-        console.log("draggingCard", draggingCard)
         if (draggingCard) {
-            // props.changePositionCards(card.position, props.id, card.id, "card")
-            // props.createCard(draggingCard.title, "card", props.id, cards, card.position)
+            let indexStart = draggingCard.position - 1;
+            let indexEnd = card.position - 1;
+            if (isVisibleSlot?.classList.contains('card-clot-before')) {
+                indexEnd -= 1;
+            }
+
+            const arrCards = [...cards]
+                .map((card: ICard, index: number) => {
+                    if (index >= indexStart && index <= indexEnd) {
+                        let position = index === indexStart ? indexEnd + 1 : card.position - 1;
+                        let newCard = { ...card };
+                        return { ...newCard, position: position }
+                    }
+                    return card;
+                })
+                .sort((a, b) => a.position - b.position);
+            
+            setCards(arrCards);
+            props.changePositionCards(props.id, arrCards);
+
+            // const arrCards = [...cards]
+            //     .map((card: ICard, index: number) => {
+            //         if (index >= indexStart && index <= indexEnd) {
+            //             let position = index === indexStart ? indexEnd + 1 : card.position - 1;
+            //             let newCard = { ...card };
+            //             props.changePositionCards(position, props.id, card.id, "card")
+            //             return { ...newCard, position: position }
+            //         }
+            //         return card;
+            //     })
+            //     .sort((a, b) => a.position - b.position);
+
+            // setCards(arrCards);
+            // // props.changePositionCards(props.id, arrCards);
+
+            isDraggingElement?.classList.remove('hidden-card');
         }
-
-        // props.deleteCard(draggingCard?.id, 'card')
-        console.log(cards)
-
     }
 
     function handleDrag(e: any) {
@@ -144,8 +176,8 @@ export const List = (props: {
             <div className="cards-container">
                 <ol className="cards">
                     {cards &&
-                        cards
-                            // .sort((a, b) => a.position - b.position)
+                        [...cards]
+                            .sort((a, b) => a.position - b.position)
                             .map((card: ICard, index: number) => {
                                 return (
                                     <li
