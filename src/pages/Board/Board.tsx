@@ -12,9 +12,8 @@ import IconMenu from "../../common/images/icon-menu.svg"
 import IconClose from "../../common/images/icone-close.svg"
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { addNewCard, deleteCard, editPositionCard, editTitleCard } from "../../store/action-creators/CardsActionCreators";
-import { fetchLists, editTitleBoard, addNewList, deleteList, editTitleList, editBackground, editCardsPosition } from "../../store/action-creators/ListsActionCreators";
+import { fetchLists, editTitleBoard, addNewList, deleteList, editTitleList, editBackground } from "../../store/action-creators/ListsActionCreators";
 import api from '../../api/request';
-import { IList } from "../../common/interfaces/IList";
 
 const PATTERN = new RegExp(/^[0-9a-zA-Zа-яА-ЯіІ\s\-_.]+$/i);
 
@@ -25,12 +24,12 @@ export const Board = (): ReactElement => {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const { lists, title, custom } = useAppSelector(state => state.lists);
     const [isBgColor, setIsBgColor] = useState<string>(custom?.background ? custom.background : "#D4E2EE");
+
     
     let { board_id } = useParams();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        // console.log("title", title, " - isBgColor 1", isBgColor)
         api.interceptors.request.use((config: any) => {
             setIsLoading(true);
             return config;
@@ -41,14 +40,10 @@ export const Board = (): ReactElement => {
         });
         dispatch(fetchLists(Number(board_id)));
         if (custom?.background && divRef.current !== null) {
-            // console.log("title", title, " - custom.background", custom.background)
             divRef.current.style.backgroundColor = custom.background;
             setIsBgColor(custom.background)
         }
-        // [...lists].sort((a: IList, b: IList) => a.position - b.position);
-        // console.log("title", title, " - isBgColor 2", isBgColor)
     }, [dispatch, board_id, custom?.background])
-
 
     const handleKeyDown = (e: any) => {
         if (e.key === "Enter") {
@@ -71,9 +66,7 @@ export const Board = (): ReactElement => {
                     const position = lists?.length ? lists.length + 1 : 1;
                     await dispatch(addNewList({ board_id: Number(board_id), title: title, position: position }));
                 } else {
-                    // const position = cards?.length ? cards.length + 1 : 1;
                     if (position !== undefined)
-                        
                         await dispatch(addNewCard({ board_id: Number(board_id), card: { title: title, list_id: Number(list_id), position: position } }))
                 }
                 await dispatch(fetchLists(Number(board_id)));
@@ -113,31 +106,16 @@ export const Board = (): ReactElement => {
         }
     }
 
-    const changeCardsPosition = async (list_id: number | undefined, cards: ICard[]) => { 
-        console.log("changeCardsPosition", cards)
-        console.log("dispatch", await dispatch(editCardsPosition({ board_id: Number(board_id), list_id: Number(list_id), cards: cards })))
-        console.log("dispatch fetchLists", await dispatch(fetchLists(Number(board_id))))
+    const changePositionCards = async (position: number, list_id: number | undefined, card_id?: number | undefined, namePage?: string) => {
         try {
-            await dispatch(editCardsPosition({ board_id: Number(board_id), list_id: Number(list_id), cards: cards }));
+            if (namePage === "card") {
+                await dispatch(editPositionCard({ board_id: Number(board_id), card: [{ id: Number(card_id), position: position, list_id: Number(list_id) }] }));
+            }
             await dispatch(fetchLists(Number(board_id)));
-            console.log("lists", lists)
         } catch (err: any) {
             toast.error(err.message)
         }
     }
-
-    
-    // const changePositionCards = async (position: number, list_id: number | undefined, card_id?: number | undefined, namePage?: string) => { 
-    //     try {
-    //         if (namePage === "card") {
-    //             console.log("dispatch", await dispatch(editPositionCard({ board_id: Number(board_id), card_id: Number(card_id), list_id: Number(list_id), position: position })))
-    //             await dispatch(editPositionCard({ board_id: Number(board_id), card_id: Number(card_id), list_id: Number(list_id), position: position }));
-    //         } 
-    //         await dispatch(fetchLists(Number(board_id)));
-    //     } catch (err: any) {
-    //         toast.error(err.message)
-    //     }
-    // }
 
     const changeBackgroundColor = async (backgroundColor: string) => {
         try {
@@ -149,8 +127,6 @@ export const Board = (): ReactElement => {
             toast.error(err.message)
         }
     }
-
-    
 
     return (
         <div className="board-main-content" ref={divRef}>
@@ -226,9 +202,7 @@ export const Board = (): ReactElement => {
             <div className="board-canvas">
                 <div className="list-container">
                     <ol className="lists">
-                        {lists && lists
-                            // .sort((a: IList, b: IList) => a.position - b.position)
-                            .map((list) => (
+                        {lists && lists.map((list) => (
                             <li className="list-wrapper" key={list.id}>
                                 <List
                                     key={list.id}
@@ -238,8 +212,7 @@ export const Board = (): ReactElement => {
                                     changeTitle={changeTitle}
                                     createCard={handleAdd}
                                     deleteCard={handleDelete}
-                                        // changePositionCards={changePositionCards}
-                                    changePositionCards={changeCardsPosition}
+                                    changePositionCards={changePositionCards}
                                     deleteList={handleDelete} />
                             </li>
                         ))}

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IList } from "../../common/interfaces/IList";
 import toast from "react-hot-toast";
-import { fetchLists, editTitleBoard, addNewList, deleteList, editTitleList, editBackground, editCardsPosition } from "../action-creators/ListsActionCreators";
+import { fetchLists, editTitleBoard, addNewList, deleteList, editTitleList, editBackground } from "../action-creators/ListsActionCreators";
 
 interface ListState {
     title: string;
@@ -67,20 +67,9 @@ export const listSlice = createSlice({
             }
         },
         [editTitleList.fulfilled.type]: (state) => {
-            
             return state;
         },
         [editTitleList.rejected.type]: (state, action) => {
-            if (action.error.message) {
-                state.status = 'failed';
-                state.error = toast.error(action.error.message);
-            }
-        },
-        [editCardsPosition.fulfilled.type]: (state) => {
-            // console.log("state title", state)
-            return state;
-        },
-        [editCardsPosition.rejected.type]: (state, action) => {
             if (action.error.message) {
                 state.status = 'failed';
                 state.error = toast.error(action.error.message);

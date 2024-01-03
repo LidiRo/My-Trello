@@ -39,7 +39,6 @@ export const cardSlice = createSlice({
             }
         },
         [editTitleCard.fulfilled.type]: (state) => {
-            // console.log("state", state)
             return state;
         },
         [editTitleCard.rejected.type]: (state, action) => {
