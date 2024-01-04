@@ -28,7 +28,7 @@ export const List = (props: {
     // console.log('board_id', board_id)
     // const [cards, setCards] = useState<ICard[] | []>(props.cards)
     const [isMouseEnter, setIsMouseEnter] = useState(false);
-    
+
     // console.log("cards start" , cards)
     const position = cards?.length ? cards.length + 1 : 1;
 
@@ -67,7 +67,7 @@ export const List = (props: {
     function dragOver(e: any) {
         e.preventDefault();
     }
-    
+
     function dragEnter(e: any, card: ICard) {
         e.preventDefault();
         setIsDraggingCard(draggingCard);
@@ -100,7 +100,7 @@ export const List = (props: {
     }
 
     console.log("cards start", cards)
-    
+
     function dragDrop(e: any, card: ICard) {
         e.preventDefault();
         if (!draggingCard) return;
@@ -109,7 +109,7 @@ export const List = (props: {
 
         let isAbove: boolean = draggingCard.position < card.position;
 
-        
+
         if (isAbove) {
             indexStart = draggingCard.position - 1;
             indexEnd = card.position - 1;
@@ -122,61 +122,32 @@ export const List = (props: {
         }
         // console.log("draggingCard position: ", draggingCard.position, " card position:", card.position)
         // console.log("indexStart: ", indexStart, ", indexEnd:", indexEnd);
-        
-        // [...cards]
-        //     .map(async (card: ICard, index: number) => {
-        //         let position: number = card.position;
-        //         if (index >= indexStart && index <= indexEnd) {
-                    
-        //             // console.log("index: ", index, isAbove)
-        //             // console.log("draggingCard: ", draggingCard.position, " card:", card.position)
-        //             if (isAbove) { 
-        //                 position = index === indexStart ? indexEnd + 1 : card.position - 1;
-        //             }
-        //             else {
-        //                 position = index === indexEnd ? indexStart + 1 : card.position + 1;
-        //             }
-        //             // console.log("card ", card.id, ": new position ", position)
-                    
-        //             // let newCard = { ...card };
-        //             props.changePositionCards(position, props.id, card.id, "card")
-        //             // return { ...newCard, position: position }
-        //         }
-                
-        //         // return card;
-        //     })
-            // .sort((a, b) => a.position - b.position);
-        
-        isDraggingElement?.classList.remove('hidden-card');
-        
-        // if (draggingCard) {
-        //     let indexStart = draggingCard.position - 1;
-        //     let indexEnd = card.position - 1;
-        //     if (isVisibleSlot?.classList.contains('card-clot-before')) {
-        //         indexEnd -= 1;
-        //     }
 
-            const arrCards = [...cards]
-                .map((card: ICard, index: number) => {
-                    let position: number = card.position;
-                    if (index >= indexStart && index <= indexEnd) {
-                        if (isAbove) {
-                            position = index === indexStart ? indexEnd + 1 : card.position - 1;
-                        }
-                        else {
-                            position = index === indexEnd ? indexStart + 1 : card.position + 1;
-                        }
-                        props.changePositionCards(position, props.id, card.id, "card")
-                        let newCard = { ...card };
-                        return { ...newCard, position: position }
+        isDraggingElement?.classList.remove('hidden-card');
+
+        const arrCards = [...cards]
+            .map((card: ICard, index: number) => {
+                let position: number = card.position;
+                if (index >= indexStart && index <= indexEnd) {
+                    // console.log("index: ", index, isAbove)
+                    // console.log("draggingCard: ", draggingCard.position, " card:", card.position)
+                    if (isAbove) {
+                        position = index === indexStart ? indexEnd + 1 : card.position - 1;
                     }
-                    return card;
-                })
-                .sort((a, b) => a.position - b.position);
+                    else {
+                        position = index === indexEnd ? indexStart + 1 : card.position + 1;
+                    }
+                    // console.log("card ", card.id, ": new position ", position)
+                    props.changePositionCards(position, props.id, card.id, "card")
+                    let newCard = { ...card };
+                    return { ...newCard, position: position }
+                }
+                return card;
+            })
+            .sort((a, b) => a.position - b.position);
         console.log("cards drop", arrCards)
-        // props.changePositionCards(props.id, arrCards, "card")
-            // setCards(arrCards);
-        //     // props.changePositionCards(props.id, arrCards);
+        // setCards(arrCards);
+        // props.changePositionCards(props.id, arrCards);
         // }
     }
 
@@ -220,18 +191,18 @@ export const List = (props: {
                                         <div className="card-container"
                                             onDragEnter={(e: any) => dragEnter(e, card)}
                                         >
-                                        <Card
-                                            key={card.id}
-                                            id={card.id}
-                                            listId={Number(props.id)}
-                                            title={card.title}
-                                            index={index}
-                                            changeTitle={props.changeTitle}
-                                            deleteCard={() => props.deleteCard(card.id, "card")}
+                                            <Card
+                                                key={card.id}
+                                                id={card.id}
+                                                listId={Number(props.id)}
+                                                title={card.title}
+                                                index={index}
+                                                changeTitle={props.changeTitle}
+                                                deleteCard={() => props.deleteCard(card.id, "card")}
                                             />
                                         </div>
                                         <div className="card-clot-after"></div>
-                                        
+
                                     </li>
                                 )
                             }
