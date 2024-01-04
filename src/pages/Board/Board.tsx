@@ -106,10 +106,13 @@ export const Board = (): ReactElement => {
         }
     }
 
+    // const changePositionCards = async (list_id: number | undefined, cards: [], namePage?: string) => {
     const changePositionCards = async (position: number, list_id: number | undefined, card_id?: number | undefined, namePage?: string) => {
+        // console.log("changePositionCards position: ", position, "card id: ", card_id, "board_id", board_id)
         try {
             if (namePage === "card") {
                 await dispatch(editPositionCard({ board_id: Number(board_id), card: [{ id: Number(card_id), position: position, list_id: Number(list_id) }] }));
+                // await dispatch(editPositionCard({ board_id: Number(board_id), cards: cards }));
             }
             await dispatch(fetchLists(Number(board_id)));
         } catch (err: any) {

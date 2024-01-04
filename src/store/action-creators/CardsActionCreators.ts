@@ -14,5 +14,8 @@ export const editTitleCard = createAsyncThunk('cards/editTitleCard', async ({ bo
 })
 
 export const editPositionCard = createAsyncThunk('cards/editPositionCard', async ({ board_id, card }: { board_id: number, card: [{ id: number, position: number, list_id: number }] }) => {
+    console.log("editPositionCard: ", card)
+    console.log("await: ", await instance.put(`/board/${board_id}/card`, card))
+
     await instance.put(`/board/${board_id}/card`, card);
 })
