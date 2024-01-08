@@ -66,6 +66,7 @@ export const Board = (): ReactElement => {
                     const position = lists?.length ? lists.length + 1 : 1;
                     await dispatch(addNewList({ board_id: Number(board_id), title: title, position: position }));
                 } else {
+                    const position = cards?.length ? cards.length + 1 : 1;
                     if (position !== undefined)
                         await dispatch(addNewCard({ board_id: Number(board_id), card: { title: title, list_id: Number(list_id), position: position } }))
                 }
@@ -213,7 +214,7 @@ export const Board = (): ReactElement => {
                                     changeTitle={changeTitle}
                                     createCard={handleAdd}
                                     deleteCard={handleDelete}
-                                    changePositionCards={changePositionCards}
+                                    // changePositionCards={changePositionCards}
                                     deleteList={handleDelete} />
                             </li>
                         ))}
