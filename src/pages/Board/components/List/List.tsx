@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './list.scss';
 import { Card } from "../Card/Card";
 import CreateNewCard from "../Card/CreateNewCard/CreateNewCard";
 import { ICard } from "../../../../common/interfaces/ICard";
-import { dragStartReducer, getCurrentCards, getCurrentList, getCurrentCardCoordinates } from "../../../../store/reducers/SlotSlice";
+import { getDraggingCard, getCurrentCards, getCurrentList} from "../../../../store/reducers/SlotSlice";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/hooks";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { addNewCard, editPositionCard } from "../../../../store/action-creators/CardsActionCreators";
 import { fetchLists } from "../../../../store/action-creators/ListsActionCreators";
+import { showModalCardWindow } from "../../../../store/reducers/CardSlice";
 
 export const List = (props: {
     id?: number;
@@ -22,9 +23,16 @@ export const List = (props: {
     const { cards } = props;
     let { board_id } = useParams();
     const [isMouseEnter, setIsMouseEnter] = useState(false);
-    const [isVisibleSlot, setIsVisibleSlot] = useState<HTMLElement | null>(null)
-    const { draggingCard, currentList, currentCards, currentCardCoordinates } = useAppSelector(state => state.slots)
+    const [isVisibleSlot, setIsVisibleSlot] = useState<boolean[]>(cards.map(() => false))
+    const [isBeforeCard, setIsBeforeCard] = useState<boolean>(false);
+    const [isAfterCard, setIsAfterCard] = useState<boolean>(false);
+    const { draggingCard, currentList, currentCards} = useAppSelector(state => state.slots)
     const [isDraggingElement, setIsDraggindElement] = useState<HTMLElement | null>(null);
+
+
+    useEffect(() => {
+        setIsVisibleSlot(cards.map(() => false))
+    }, [cards])
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>, namePage?: string) => {
         const newTitle = e.target.value;
@@ -40,78 +48,53 @@ export const List = (props: {
     }
 
     function dragStart(e: any, card: ICard) {
-        const draggingElement = e.currentTarget;
-        setIsDraggindElement(draggingElement);
+        const draddingElement = e.currentTarget;
+        setIsDraggindElement(draddingElement);
         setTimeout(() => {
-            draggingElement.classList.add('dragging');
+            draddingElement.classList.add('dragging');
         }, 0)
-        dispatch(dragStartReducer(card));
+        dispatch(getDraggingCard(card));
         dispatch(getCurrentList(props.id));
         dispatch(getCurrentCards(cards));
-        // console.log(draggingElement.parentNode)
     }
 
     function dragEnd(e: any) {
         e.target.classList.remove('dragging');
-        isVisibleSlot?.classList.remove('is-visible');
+        isDraggingElement?.classList.remove('hidden-card');
+        setIsVisibleSlot(isVisibleSlot.map(() => false))
     }
 
     function dragOver(e: any) {
         e.preventDefault();
-        // console.log("dragOver", e.currentTarget)
-        // console.log("e.clientY", e.clientY, 'e.clientX', e.clientX)
     }
 
-    function dragEnter(e: any, card: ICard) {
+    function dragEnter(e: any, card: ICard, index: number) {
         e.preventDefault();
         if (!draggingCard) return;
-        const slotBefore = e.currentTarget.parentNode.querySelector('.card-clot-before');
-        const slotAfter = e.currentTarget.parentNode.querySelector('.card-clot-after');
-        const currentCard = e.currentTarget;
-
-        const box = currentCard.getBoundingClientRect();
-        const boxCoordinates = {
-            top: box.top,
-            bottom: box.bottom,
-            left: box.left,
-            right: box.right,
-            x: box.x,
-            y: box.y,
-        }
-        dispatch(getCurrentCardCoordinates(boxCoordinates));
-        // console.log(currentCardCoordinates)
-        // console.log("e.clientY", e.clientY, 'e.clientX', e.clientX)
-        // console.log("box.left", box.left, 'box.right', box.right)
-        if (e.clientX > box.left && e.clientX < box.right) {
-            console.log("box.left", box.left, 'box.right', box.right)
-            if (e.clientY < (box.y + box.height / 2)) {
-                if (slotAfter && e.currentTarget.parentNode !== isDraggingElement) {
-                    isDraggingElement?.classList.add('hidden-card');
-                    isVisibleSlot?.classList.remove('is-visible');
-                    slotAfter.classList.add('is-visible');
+        const box = e.currentTarget.getBoundingClientRect();
+        const centerDropCard = box.y + box.height / 2;
+            if (e.currentTarget.parentNode !== isDraggingElement) {
+                isDraggingElement?.classList.add('hidden-card');
+                setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
+                    if (i === index) {
+                        return isVisibleSlot[i] = true;
+                    }
+                    return false
+                }))
+                if (e.clientY < centerDropCard) {
+                    setIsBeforeCard(false);
+                    setIsAfterCard(true);
                 }
-                setIsVisibleSlot(slotAfter);
-            }
 
-            if (e.clientY > (box.y + box.height / 2) && e.currentTarget.parentNode !== isDraggingElement) {
-                if (slotBefore) {
-                    isDraggingElement?.classList.add('hidden-card');
-                    isVisibleSlot?.classList.remove('is-visible');
-                    slotBefore.classList.add('is-visible');
+                if (e.clientY > centerDropCard) {
+                    setIsAfterCard(false);
+                    setIsBeforeCard(true);
                 }
-                setIsVisibleSlot(slotBefore);
             }
-        }
-    }
-    function dragEnterList(e: any) {
-        e.preventDefault();
-        // console.log("dragEnterList", e.currentTarget)
-        // draggingElement.parentNode.classList.add('drop-zone');
     }
 
     function handleDrag(e: any) {
         e.preventDefault();
-        //         if (!currentCard) return;
         //         const box = currentCard.getBoundingClientRect();
         // if (e.clientX > currentCardCoordinates.left && e.clientX < currentCardCoordinates.right) {
         //     console.log("e.clientY", e.clientY, 'e.clientX', e.clientX)
@@ -120,27 +103,24 @@ export const List = (props: {
         // draggingElement.parentNode.classList.add('drop-zone');
     }
 
-    console.log(cards)
     function dragLeave(e: any) {
         e.preventDefault();
     }
 
     async function dragDrop(e: any, card: ICard) {
         e.preventDefault();
-        isVisibleSlot?.classList.remove('is-visible');
-        // console.log(e.currentTarget)
-
+        isDraggingElement?.classList.remove('hidden-card');
+        setIsVisibleSlot(isVisibleSlot.map(() => false))
         if (!draggingCard) return;
         let indexStart: number;
         let indexEnd: number;
         let isAbove: boolean = draggingCard.position < card.position;
-
+        let position: number;
         if (props.id === currentList) {
-            isDraggingElement?.classList.remove('hidden-card');
             if (isAbove) {
                 indexStart = draggingCard.position - 1;
                 indexEnd = card.position - 1;
-                if (isVisibleSlot?.classList.contains('card-clot-before')) {
+                if (isBeforeCard) {
                     indexEnd -= 1;
                 }
             } else {
@@ -149,9 +129,8 @@ export const List = (props: {
             }
 
             for (let i = indexEnd; i >= indexStart; i--) {
-                let position: number;
+                
                 if (isAbove) {
-                    // console.log(cards)
                     position = i === indexStart ? indexEnd + 1 : cards[i].position - 1;
                 }
                 else {
@@ -159,31 +138,40 @@ export const List = (props: {
                 }
                 await dispatch(editPositionCard({ board_id: Number(board_id), card: [{ id: cards[i].id, position: position, list_id: Number(props.id) }] }));
             }
-
         } else {
             let positionNewCard: number;
-            if (isVisibleSlot?.classList.contains('card-clot-after')) {
+            if (isAfterCard) {
                 positionNewCard = card.position + 1;
             } else {
                 positionNewCard = card.position;
             }
             await dispatch(addNewCard({ board_id: Number(board_id), card: { title: draggingCard.title, list_id: Number(props.id), position: positionNewCard } }))
             props.deleteCard(draggingCard.id, "card");
-            isDraggingElement?.classList.remove('hidden-card');
             if (!currentCards) return;
             indexStart = draggingCard.position;
             indexEnd = currentCards.length - 1;
             for (let i = indexEnd; i >= indexStart; i--) {
-                let position = currentCards[i].position - 1;
+                position = currentCards[i].position - 1;
                 await dispatch(editPositionCard({ board_id: Number(board_id), card: [{ id: currentCards[i].id, position: position, list_id: Number(currentList) }] }));
             }
         }
         await dispatch(fetchLists(Number(board_id)));
     }
 
+    function showCardModal(card: ICard) {
+        dispatch(showModalCardWindow({ card: card, listTitle: props.title, isVisibleCardModal : true}));
+    }
+
     // console.log(cards)
     return (
-        <div className="list-container">
+        <div className="list-container"
+            onDragOver={(e: any) => dragOver(e)}
+            // onDragLeave={(e:any) => console.log(props.id)}
+            // onDragEnter={(e: any) => console.log("list-container",e.currentTarget)}
+            onDrop={(e: any) => e.preventDefault()}
+            // onDragEnter={(e: any) => dragEnterList(e)}
+            // onDrag={(e: any) => console.log(e.target)}
+        >
             <div className="list-title">
                 {isMouseEnter &&
                     <input
@@ -204,9 +192,10 @@ export const List = (props: {
             </div>
             <div className="cards-container">
                 <ol className="cards"
-                    onDragLeave={(e: any) => dragLeave(e)}
-                    onDragOver={(e: any) => dragOver(e)}
-                    onDragEnter={(e: any) => dragEnterList(e)}>
+                    // onDragLeave={(e: any) => dragLeave(e)}
+                    // onDragOver={(e: any) => dragOver(e)}
+                    
+                >
                     {cards &&
                         [...cards]
                             .sort((a, b) => a.position - b.position)
@@ -223,12 +212,19 @@ export const List = (props: {
                                         onDrag={(e: any) => handleDrag(e)}
                                     // onDragLeave={(e: any) => dragLeave(e, card)}
                                     >
-                                        <div className="card-clot-before"></div>
-                                        <div className="card-container"
-                                            onDragEnter={(e: any) => dragEnter(e, card)}
-                                        // onDragLeave={(e:any) => dragLeave(e, card)}
+                                        {isVisibleSlot[index] && isBeforeCard &&
+                                            <div className="slot"></div>
+                                        }
+                                        {/* <Link className="link" to={`/board/${board_id}/card/${card.id}`}> */}
+                                        <div className="card-container card-title"
+                                            onDragEnter={(e: any) => dragEnter(e, card, index)}
+                                                onDragLeave={(e: any) => dragLeave(e)}
+                                                onClick={() => showCardModal(card)}
                                         >
-                                            <Card
+                                            {/* <div className="card-title"> */}
+                                                {card.title}
+                                            {/* </div> */}
+                                            {/* <Card
                                                 key={card.id}
                                                 id={card.id}
                                                 listId={Number(props.id)}
@@ -236,9 +232,12 @@ export const List = (props: {
                                                 index={index}
                                                 changeTitle={props.changeTitle}
                                                 deleteCard={() => props.deleteCard(card.id, "card")}
-                                            />
+                                            /> */}
                                         </div>
-                                        <div className="card-clot-after"></div>
+                                        {/* </Link> */}
+                                        {isVisibleSlot[index] && isAfterCard &&
+                                            <div className="slot"></div>
+                                        }
                                     </li>
                                 )
                             }

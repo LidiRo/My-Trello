@@ -35,7 +35,7 @@ export const SlotSlice = createSlice({
     name: 'slots',
     initialState,
     reducers: {
-        dragStartReducer(state, action) {
+        getDraggingCard(state, action) {
             state.draggingCard = action.payload;
         },
         getCurrentList(state, action) {
@@ -49,9 +49,9 @@ export const SlotSlice = createSlice({
         },
         getCurrentCardCoordinates(state, action) {
             state.currentCardCoordinates = action.payload;
-        }
+        },
     },
 })
 
-export const { dragStartReducer, getCurrentList, getCurrentCards, getCurrentCardCoordinates, getCurrentCard } = SlotSlice.actions;
+export const { getDraggingCard, getCurrentList, getCurrentCards, getCurrentCardCoordinates, getCurrentCard } = SlotSlice.actions;
 export default SlotSlice.reducer;

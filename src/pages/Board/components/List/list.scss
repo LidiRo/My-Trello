@@ -1,5 +1,9 @@
 @import '../my-app/src/common/_styles';
 
+.list-container{
+    
+}
+
 .list-title h2 {
     width: 180px;
     font-family: $primary-font-family;
@@ -51,14 +55,7 @@
 //     margin-bottom: 5px;
 // }
 
-.slot {
-    // background-color: #b8b8b8e8;
-    // display: none;
-    border-radius: $border-radius;
-    margin-bottom: 5px;
-    width: 180px;
-    height: 30px;
-}
+
 
 ol {
     list-style: none;
@@ -140,11 +137,6 @@ li {
     background: #a5cd64;
 }
 
-.card:hover {
-    cursor: pointer;
-    background-color: rgba(199, 199, 199, 0.521)
-}
-
 .card.dragging:active {
     // opacity: 0,5;
 }
@@ -188,8 +180,26 @@ li {
     padding-left: 3px;
 }
 
-.card-title {
-    width: 100%;
+// .card-title {
+//     width: 100%;
+//     color: $primary-font-color;
+// }
+
+.card-title{
+    height: 30px;
+    padding-left: 3px;
+    background-color: rgba(243, 243, 243, 0.521);
+    color: $primary-font-color;
+    font-family: $primary-font-family;
+    font-size: $text-font-size;
+    margin-bottom: 5px;
+    border-radius: $border-radius;
+}
+
+.card-title:hover{
+    cursor: pointer;
+    background-color: rgb(243, 243, 243);
+    border: 2px solid rgb(179, 179, 179);
 }
 
 .card-container input {
@@ -203,13 +213,50 @@ li {
 
 .card-container {
     position: relative;
+    // height: 30px;
+    // background-color: rgba(243, 243, 243, 0.521);
+    border-radius: $border-radius;
+    // margin-bottom: 5px;
+    // padding-left: 3px;
+    // padding-right: 5px;
+    // z-index: 100;
+}
+
+// .card-container:hover {
+//     cursor: pointer;
+//     background-color: rgb(243, 243, 243);
+//     border: 1px solid rgb(179, 179, 179);
+// }
+
+.card-container-block{
     height: 30px;
     background-color: rgba(243, 243, 243, 0.521);
     border-radius: $border-radius;
     margin-bottom: 5px;
-    // padding-left: 3px;
-    // padding-right: 5px;
-    z-index: 100;
+}
+
+.card-container-block:hover {
+    cursor: pointer;
+    background-color: rgb(243, 243, 243);
+    border: 2px solid rgb(179, 179, 179);
+}
+
+.link {
+    text-decoration: none;
+    // background-color: #00000020;
+}
+
+// .link:hover {
+//     background-color: #00000020;
+// }
+
+.slot {
+    background-color: rgba(124, 124, 133, 0.305);
+    border-radius: $border-radius;
+    margin-bottom: 5px;
+    // margin-top: 5px;
+    width: 180px;
+    height: 30px;
 }
 
 .card-menu {

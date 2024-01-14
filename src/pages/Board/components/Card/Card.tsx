@@ -58,7 +58,7 @@ export const Card = (props: {
     // })
 
     return (
-        <div className="card-container ">
+        <div className="card-container-block">
             {/* {props.visibleSlot && <div className="slot">SLOT</div>} */}
             {isMouseEnter &&
                 <input

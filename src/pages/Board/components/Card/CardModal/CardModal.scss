@@ -1,0 +1,116 @@
+@import '../my-app/src/common/_styles';
+
+.card-modal{
+    width: 60%;
+    height: 500px;
+    background-color: aliceblue;
+    border-radius: $border-radius;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.card-modal-header{
+    padding: 10px 40px 10px 20px;
+}
+
+.card-modal-cancel-button {
+    position: fixed;
+    right: 7px;
+    top: 17px;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    padding: 5px;
+}
+
+.card-modal-cancel-button:hover{
+    background-color: rgba(0, 0, 0, 0.105);
+    border-radius: 100%;
+    // width: 20px;
+    // height: 20px;
+    margin: 0;
+    // padding: 5px;
+}
+
+.cancel-button-icon {
+    cursor: pointer;
+    width: 17px;
+    vertical-align: bottom;
+}
+
+.card-modal-title-card{
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    font-family: $primary-font-family;
+    // font-size: $title-font-size;
+    font-size: 24px;
+    font-weight: bold;
+    color: $primary-font-color;
+    // margin: 10px 10px 0;
+    padding: 8px;
+    width: 87%;
+}
+
+.card-modal-title-list{
+    margin-left: 10px;
+    font-family: $primary-font-family;
+    font-size: $text-font-size;
+}
+
+.card-modal-main{
+    // margin-left: 10px;
+    padding: 10px 20px;
+    width: 60%;
+}
+
+h3{
+    font-family: $primary-font-family;
+    font-size: $title-font-size;
+    margin: 0;
+    padding-left: 8px;
+}
+
+.card-modal-participants-list{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-left: 8px;
+    margin: 10px 0;
+}
+
+.avatar-participant{
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 100%;
+    background-color: blueviolet;
+}
+
+.button-add-participant{
+    // background-color: #493c45;
+    background-color: rgb(36, 36, 74);
+    border: 1px solid black;
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    margin-right: 10px;
+}
+
+.add-button-icon{
+    margin: 0;
+    vertical-align: middle;
+    color: black;
+}
+
+.button-join{
+    width: 100px;
+    height: 30px;
+    border-radius: $border-radius;
+    font-family: $primary-font-family;
+    font-size: $text-font-size;
+    background-color: $primary-color-button;
+    border: none;
+    color: $font-color-button;
+}

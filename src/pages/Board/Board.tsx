@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { addNewCard, deleteCard, editPositionCard, editTitleCard } from "../../store/action-creators/CardsActionCreators";
 import { fetchLists, editTitleBoard, addNewList, deleteList, editTitleList, editBackground } from "../../store/action-creators/ListsActionCreators";
 import api from '../../api/request';
+import { CardModal } from "./components/Card/CardModal/CardModal";
 
 const PATTERN = new RegExp(/^[0-9a-zA-Zа-яА-ЯіІ\s\-_.]+$/i);
 
@@ -220,6 +221,7 @@ export const Board = (): ReactElement => {
                         ))}
                         <CreateNewList createList={handleAdd} />
                     </ol>
+                    <CardModal />
                 </div>
             </div>
             <Toaster />

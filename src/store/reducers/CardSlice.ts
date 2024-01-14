@@ -5,20 +5,33 @@ import toast from "react-hot-toast";
 
 interface CardState {
     cards: ICard[];
+    card: ICard | null;
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string;
+    listTitle: string;
+    isVisibleCardModal: boolean;
 }
 
 const initialState: CardState = {
     cards: [],
+    card: null,
     status: 'idle',
     error: '',
+    listTitle: '',
+    isVisibleCardModal: false,
 };
 
 export const cardSlice = createSlice({
     name: 'cards',
     initialState,
-    reducers: {},
+    reducers: {
+        showModalCardWindow(state, action) {
+            const { card, listTitle, isVisibleCardModal } = action.payload;
+            state.card = card;
+            state.listTitle = listTitle;
+            state.isVisibleCardModal = isVisibleCardModal;
+        }
+    },
     extraReducers: {
         [addNewCard.fulfilled.type]: (state) => {
             return state;
@@ -51,7 +64,10 @@ export const cardSlice = createSlice({
             // console.log("state", state)
             return state;
         },
+
     }
 });
+
+export const { showModalCardWindow } = cardSlice.actions;
 
 export default cardSlice.reducer;
