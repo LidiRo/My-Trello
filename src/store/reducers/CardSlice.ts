@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICard } from "../../common/interfaces/ICard";
-import { addNewCard, deleteCard, editPositionCard, editTitleCard } from "../action-creators/CardsActionCreators";
+import { addNewCard, deleteCard, editPositionCard, editTitleCard, editDescriptionCard } from "../action-creators/CardsActionCreators";
 import toast from "react-hot-toast";
 
 interface CardState {
@@ -8,6 +8,7 @@ interface CardState {
     card: ICard | null;
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string;
+    listId: number | null;
     listTitle: string;
     isVisibleCardModal: boolean;
 }
@@ -17,6 +18,7 @@ const initialState: CardState = {
     card: null,
     status: 'idle',
     error: '',
+    listId: null,
     listTitle: '',
     isVisibleCardModal: false,
 };
@@ -26,10 +28,11 @@ export const cardSlice = createSlice({
     initialState,
     reducers: {
         showModalCardWindow(state, action) {
-            const { card, listTitle, isVisibleCardModal } = action.payload;
+            const { card, listId, listTitle} = action.payload;
             state.card = card;
+            state.listId = listId;
             state.listTitle = listTitle;
-            state.isVisibleCardModal = isVisibleCardModal;
+            state.isVisibleCardModal = true;
         }
     },
     extraReducers: {
@@ -61,10 +64,11 @@ export const cardSlice = createSlice({
             }
         },
         [editPositionCard.fulfilled.type]: (state) => {
-            // console.log("state", state)
             return state;
         },
-
+        [editDescriptionCard.fulfilled.type]: (state) => {
+            return state;
+        }
     }
 });
 

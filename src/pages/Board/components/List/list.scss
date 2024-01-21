@@ -213,12 +213,16 @@ li {
 
 .card-container {
     position: relative;
-    // height: 30px;
+    height: 100%;
+    min-height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     // background-color: rgba(243, 243, 243, 0.521);
     border-radius: $border-radius;
     // margin-bottom: 5px;
     // padding-left: 3px;
-    // padding-right: 5px;
+    padding-right: 5px;
     // z-index: 100;
 }
 
@@ -239,6 +243,28 @@ li {
     cursor: pointer;
     background-color: rgb(243, 243, 243);
     border: 2px solid rgb(179, 179, 179);
+}
+
+.card-title-description .tooltiptext-card {
+    visibility: hidden;
+    width: 170px;
+    background-color: rgb(218, 218, 218);
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 95%;
+}
+
+.card-title-description:hover .tooltiptext-card {
+    visibility: visible;
+}
+
+.icon-description {
+    width: 18px;
+    height: 18px;
 }
 
 .link {
@@ -355,3 +381,4 @@ li {
     width: 35px;
     height: 30px;
 }
+

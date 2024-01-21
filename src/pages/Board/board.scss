@@ -1,5 +1,9 @@
 @import '../my-app/src/common/_styles';
 
+// body.window-up:not(.card-modal){
+//     filter: brightness(0.5);
+// }
+
 .board-main-content{
     background-color: $primary-color-background;
     height: 100vh;

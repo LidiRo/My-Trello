@@ -28,7 +28,15 @@ export const Board = (): ReactElement => {
 
     
     let { board_id } = useParams();
+
+    // const [isVisibleCardModal, setIsVisibleCardModal] = useState(document.location.pathname === `/board/${board_id}` ? true : false);
     const dispatch = useAppDispatch();
+
+    // if (document.location.pathname === `/board/${board_id}`) {
+    //     console.log("OK")
+    // }
+
+    // console.log(isVisibleCardModal)
 
     useEffect(() => {
         api.interceptors.request.use((config: any) => {
@@ -44,6 +52,7 @@ export const Board = (): ReactElement => {
             divRef.current.style.backgroundColor = custom.background;
             setIsBgColor(custom.background)
         }
+        console.log(document.location.pathname)
     }, [dispatch, board_id, custom?.background])
 
     const handleKeyDown = (e: any) => {
@@ -221,9 +230,13 @@ export const Board = (): ReactElement => {
                         ))}
                         <CreateNewList createList={handleAdd} />
                     </ol>
-                    <CardModal />
+                    
                 </div>
             </div>
+            {/* {isVisibleCardModal &&
+            <CardModal />
+            } */}
+            <CardModal />
             <Toaster />
         </div>
     );

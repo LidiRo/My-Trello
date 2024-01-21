@@ -1,8 +1,18 @@
 @import '../my-app/src/common/_styles';
 
+.window-up{
+    // filter: brightness(0.5);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #0000006e;
+}
+
 .card-modal{
-    width: 60%;
-    height: 500px;
+    width: 500px;
+    // height: 500px;
     background-color: aliceblue;
     border-radius: $border-radius;
     position: fixed;
@@ -61,7 +71,13 @@
 .card-modal-main{
     // margin-left: 10px;
     padding: 10px 20px;
-    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    // width: 60%;
+}
+
+.card-modal-information{
+    width: 75%;
 }
 
 h3{
@@ -83,6 +99,7 @@ h3{
     width: 30px;
     height: 30px;
     margin-right: 10px;
+    margin-top: 5px;
     border-radius: 100%;
     background-color: blueviolet;
 }
@@ -96,6 +113,7 @@ h3{
     height: 30px;
     padding: 0;
     margin-right: 10px;
+    margin-top: 5px;
 }
 
 .add-button-icon{
@@ -104,7 +122,12 @@ h3{
     color: black;
 }
 
-.button-join{
+.button-copy,
+.button-move,
+.button-archive,
+.button-join,
+.button-save,
+.button-cancel{
     width: 100px;
     height: 30px;
     border-radius: $border-radius;
@@ -113,4 +136,54 @@ h3{
     background-color: $primary-color-button;
     border: none;
     color: $font-color-button;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.button-archive{
+    background-color: rgb(194, 30, 30);
+}
+
+.button-save{
+    margin-left: 8px;
+    margin-right: 5px;
+}
+
+.description-fake-textarea{
+    display: block;
+    height: 50px;
+    background-color: rgb(194, 195, 198);
+    text-decoration: none;
+    color: rgb(31, 31, 31);
+    margin-left: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: $border-radius;
+    cursor:pointer;
+}
+
+.description-textarea{
+    display: block;
+    border: none;
+    padding: 10px;
+    margin: 8px;
+    width: 325px;
+    height: 100px;
+    resize: none;
+}
+
+.card-description{
+    padding: 10px;
+    cursor: pointer;
+    font-family: $primary-font-family;
+    font-size: $text-font-size;
+}
+
+.card-modal-sidebar{
+    margin-left: 8px;
+}
+
+.card-modal-sidebar-buttons{
+    display: flex;
+    flex-direction: column;
 }

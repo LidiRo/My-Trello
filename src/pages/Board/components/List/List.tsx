@@ -3,12 +3,13 @@ import './list.scss';
 import { Card } from "../Card/Card";
 import CreateNewCard from "../Card/CreateNewCard/CreateNewCard";
 import { ICard } from "../../../../common/interfaces/ICard";
-import { getDraggingCard, getCurrentCards, getCurrentList} from "../../../../store/reducers/SlotSlice";
+import { getDraggingCard, getCurrentCards, getCurrentList } from "../../../../store/reducers/SlotSlice";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/hooks";
 import { Link, useParams } from "react-router-dom";
 import { addNewCard, editPositionCard } from "../../../../store/action-creators/CardsActionCreators";
 import { fetchLists } from "../../../../store/action-creators/ListsActionCreators";
 import { showModalCardWindow } from "../../../../store/reducers/CardSlice";
+import IconDescription from "../../../../common/images/icon-description3.png"
 
 export const List = (props: {
     id?: number;
@@ -26,9 +27,10 @@ export const List = (props: {
     const [isVisibleSlot, setIsVisibleSlot] = useState<boolean[]>(cards.map(() => false))
     const [isBeforeCard, setIsBeforeCard] = useState<boolean>(false);
     const [isAfterCard, setIsAfterCard] = useState<boolean>(false);
-    const { draggingCard, currentList, currentCards} = useAppSelector(state => state.slots)
+    const { draggingCard, currentList, currentCards } = useAppSelector(state => state.slots)
     const [isDraggingElement, setIsDraggindElement] = useState<HTMLElement | null>(null);
 
+    // console.log(document.location.pathname)
 
     useEffect(() => {
         setIsVisibleSlot(cards.map(() => false))
@@ -73,24 +75,24 @@ export const List = (props: {
         if (!draggingCard) return;
         const box = e.currentTarget.getBoundingClientRect();
         const centerDropCard = box.y + box.height / 2;
-            if (e.currentTarget.parentNode !== isDraggingElement) {
-                isDraggingElement?.classList.add('hidden-card');
-                setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
-                    if (i === index) {
-                        return isVisibleSlot[i] = true;
-                    }
-                    return false
-                }))
-                if (e.clientY < centerDropCard) {
-                    setIsBeforeCard(false);
-                    setIsAfterCard(true);
+        if (e.currentTarget.parentNode !== isDraggingElement) {
+            isDraggingElement?.classList.add('hidden-card');
+            setIsVisibleSlot(isVisibleSlot.map((_, i: number) => {
+                if (i === index) {
+                    return isVisibleSlot[i] = true;
                 }
-
-                if (e.clientY > centerDropCard) {
-                    setIsAfterCard(false);
-                    setIsBeforeCard(true);
-                }
+                return false
+            }))
+            if (e.clientY < centerDropCard) {
+                setIsBeforeCard(false);
+                setIsAfterCard(true);
             }
+
+            if (e.clientY > centerDropCard) {
+                setIsAfterCard(false);
+                setIsBeforeCard(true);
+            }
+        }
     }
 
     function handleDrag(e: any) {
@@ -129,7 +131,7 @@ export const List = (props: {
             }
 
             for (let i = indexEnd; i >= indexStart; i--) {
-                
+
                 if (isAbove) {
                     position = i === indexStart ? indexEnd + 1 : cards[i].position - 1;
                 }
@@ -159,7 +161,7 @@ export const List = (props: {
     }
 
     function showCardModal(card: ICard) {
-        dispatch(showModalCardWindow({ card: card, listTitle: props.title, isVisibleCardModal : true}));
+        dispatch(showModalCardWindow({ card: card, listId: props.id, listTitle: props.title}));
     }
 
     // console.log(cards)
@@ -169,8 +171,8 @@ export const List = (props: {
             // onDragLeave={(e:any) => console.log(props.id)}
             // onDragEnter={(e: any) => console.log("list-container",e.currentTarget)}
             onDrop={(e: any) => e.preventDefault()}
-            // onDragEnter={(e: any) => dragEnterList(e)}
-            // onDrag={(e: any) => console.log(e.target)}
+        // onDragEnter={(e: any) => dragEnterList(e)}
+        // onDrag={(e: any) => console.log(e.target)}
         >
             <div className="list-title">
                 {isMouseEnter &&
@@ -192,9 +194,9 @@ export const List = (props: {
             </div>
             <div className="cards-container">
                 <ol className="cards"
-                    // onDragLeave={(e: any) => dragLeave(e)}
-                    // onDragOver={(e: any) => dragOver(e)}
-                    
+                // onDragLeave={(e: any) => dragLeave(e)}
+                // onDragOver={(e: any) => dragOver(e)}
+
                 >
                     {cards &&
                         [...cards]
@@ -215,26 +217,25 @@ export const List = (props: {
                                         {isVisibleSlot[index] && isBeforeCard &&
                                             <div className="slot"></div>
                                         }
-                                        {/* <Link className="link" to={`/board/${board_id}/card/${card.id}`}> */}
-                                        <div className="card-container card-title"
-                                            onDragEnter={(e: any) => dragEnter(e, card, index)}
+                                        <Link className="link" to={`/board/${board_id}/card/${card.id}`}>
+                                            <div className="card-container card-title"
+                                                onDragEnter={(e: any) => dragEnter(e, card, index)}
                                                 onDragLeave={(e: any) => dragLeave(e)}
-                                                onClick={() => showCardModal(card)}
-                                        >
-                                            {/* <div className="card-title"> */}
+                                                onClick={() => { showCardModal(card)}}
+                                            >
                                                 {card.title}
-                                            {/* </div> */}
-                                            {/* <Card
-                                                key={card.id}
-                                                id={card.id}
-                                                listId={Number(props.id)}
-                                                title={card.title}
-                                                index={index}
-                                                changeTitle={props.changeTitle}
-                                                deleteCard={() => props.deleteCard(card.id, "card")}
-                                            /> */}
-                                        </div>
-                                        {/* </Link> */}
+                                                {card.description &&
+                                                    <div className="card-title-description">
+                                                        <img src={IconDescription} alt="Description" className="icon-description" />
+                                                        <span className="tooltiptext-card" title="Натисніть, щоб видалити дошку">
+                                                            Ця картка має опис
+                                                        </span>
+                                                    </div>
+                                                    
+                                                }
+                                                {/* <img src={IconDescription} alt="Description" className="icon-description" /> */}
+                                            </div>
+                                        </Link>
                                         {isVisibleSlot[index] && isAfterCard &&
                                             <div className="slot"></div>
                                         }

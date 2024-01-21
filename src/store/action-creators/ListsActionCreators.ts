@@ -3,9 +3,13 @@ import instance from "../../api/request";
 import { IList } from "../../common/interfaces/IList";
 import api from '../../api/request';
 
-export const fetchLists = createAsyncThunk('lists/fetchLists', async (board_id: number) => {
+export const fetchLists2 = createAsyncThunk('lists/fetchLists', async (board_id: number) => {
     const response: { title: string, lists: IList[], custom?: { background: string } } = await instance.get(`/board/${board_id}`);
     return response;
+})
+export const fetchLists = createAsyncThunk('lists/fetchLists', async (board_id: number) => {
+    const response: { title: string, lists: {id: number, title: string, cards: {id: number, title: string, description: string}}, custom?: { background: string } } = await instance.get(`/board/${board_id}`);
+    return response
 })
 
 export const editTitleBoard = createAsyncThunk('lists/editTitleBoard', async ({ board_id, title }: { board_id: number, title: string }) => {
