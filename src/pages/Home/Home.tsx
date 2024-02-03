@@ -58,6 +58,8 @@ export const Home: React.FC = (): ReactElement => {
         )
     }
 
+    console.log("boards_Home", boards)
+
     return (
         <div className="home-container">
             <h1 className="home-title">Мої дошки</h1>

@@ -38,6 +38,9 @@ export const Board = (): ReactElement => {
 
     // console.log(isVisibleCardModal)
 
+    const { boards } = useAppSelector(state => state.boards);
+    // console.log("boards_Board", boards)
+
     useEffect(() => {
         api.interceptors.request.use((config: any) => {
             setIsLoading(true);
@@ -52,7 +55,6 @@ export const Board = (): ReactElement => {
             divRef.current.style.backgroundColor = custom.background;
             setIsBgColor(custom.background)
         }
-        console.log(document.location.pathname)
     }, [dispatch, board_id, custom?.background])
 
     const handleKeyDown = (e: any) => {
@@ -139,6 +141,7 @@ export const Board = (): ReactElement => {
             toast.error(err.message)
         }
     }
+    
 
     return (
         <div className="board-main-content" ref={divRef}>

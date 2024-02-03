@@ -43,7 +43,7 @@
     // padding: 5px;
 }
 
-.cancel-button-icon {
+.card-modal-title-list.cancel-button-icon {
     cursor: pointer;
     width: 17px;
     vertical-align: bottom;
@@ -127,7 +127,9 @@ h3{
 .button-archive,
 .button-join,
 .button-save,
-.button-cancel{
+.button-cancel,
+.button-edit,
+.form-create-card{
     width: 100px;
     height: 30px;
     border-radius: $border-radius;
@@ -140,6 +142,10 @@ h3{
     cursor: pointer;
 }
 
+.button-copy{
+    // position: absolute;
+}
+
 .button-archive{
     background-color: rgb(194, 30, 30);
 }
@@ -147,6 +153,13 @@ h3{
 .button-save{
     margin-left: 8px;
     margin-right: 5px;
+}
+
+.card-modal-description-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .description-fake-textarea{
@@ -186,4 +199,152 @@ h3{
 .card-modal-sidebar-buttons{
     display: flex;
     flex-direction: column;
+}
+
+.copy-modal{
+    width: 260px;
+    background-color: rgb(220, 228, 237);
+    border-radius: $border-radius;
+    position: fixed;
+    top: 50%;
+    left: 67%;
+    transform: translate(-50%, -50%);
+}
+
+.copy-modal-header{
+    margin: 10px;
+}
+
+// .copy-modal-header{
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+//     align-items: center;
+// }
+
+.copy-modal-title{
+    font-size: 18px;
+    padding: 0;
+    text-align: center;
+}
+
+.copy-modal-cancel-button {
+    position: fixed;
+    right: 0;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    padding: 4px;
+    margin: 10px 6px;
+}
+
+.copy-modal-cancel-button .cancel-button-icon {
+    width: 15px;
+}
+
+.form-select{
+    width: 240px;
+    margin: 10px;
+}
+
+.form-select label{
+    display: none;
+    // font-family: $primary-font-family;
+    // font-size: 16px;
+    // font-weight: bold;
+    // margin: 0;
+}
+
+.copy-modal-card-title-textarea{
+    display: block;
+    border: 1px solid rgb(161, 161, 161);
+    font-family: $primary-font-family;
+    font-size: $text-font-size;
+    padding: 5px;
+    margin: 8px 0;
+    width: 95%;
+    border-radius: $border-radius;
+}
+
+.button-link{
+    display: block;
+    background-color: rgba(198, 200, 201, 0.792);
+    padding: 5px;
+    border-radius: $border-radius;
+    cursor: pointer;
+    position: relative;
+    // height: 50px;
+}
+
+.button-link:hover{
+    background-color: rgba(174, 180, 183, 0.792);
+}
+
+.label{
+    display: block;
+    font-family: $primary-font-family;
+    font-size: 16px;
+    // font-weight: bold;
+    margin: 0;
+}
+
+.value{
+    display: block;
+    font-family: $primary-font-family;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.button-link select{
+    border: none;
+    cursor: pointer;
+    height: 50px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    opacity: 0;
+    z-index: 2;
+}
+
+.form-select-board{
+    display: flex;
+    flex-direction: column;
+    margin: 8px 0;
+}
+
+// .form-select-board label{
+//     display: none;
+// }
+
+// form select{
+//     border: 1px solid rgb(161, 161, 161);
+//     padding: 3px 5px;
+//     margin-top: 5px;
+//     font-family: $primary-font-family;
+//     font-size: 16px;
+// }
+
+.form-select-list-and-position{
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-select-list{
+    display: flex;
+    flex-direction: column;
+    margin: 8px 0;
+    width: 65%;
+}
+
+.form-select-position{
+    display: flex;
+    flex-direction: column;
+    margin: 8px 0;
+    width: 25%;
+}
+
+.form-create-card{
+    width: 130px;
 }

@@ -245,7 +245,7 @@ export const List = (props: {
                             )}
                 </ol>
             </div>
-            <div className="add-card-button-container">
+            <div className="list-container-add-card-button-container">
                 <CreateNewCard
                     listId={Number(props.id)}
                     createCard={(title: string) => props.createCard(title, "card", props.id, cards)}

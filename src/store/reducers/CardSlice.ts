@@ -33,6 +33,9 @@ export const cardSlice = createSlice({
             state.listId = listId;
             state.listTitle = listTitle;
             state.isVisibleCardModal = true;
+        },
+        closeModalCardWindow(state) {
+            state.isVisibleCardModal = false;
         }
     },
     extraReducers: {
@@ -72,6 +75,6 @@ export const cardSlice = createSlice({
     }
 });
 
-export const { showModalCardWindow } = cardSlice.actions;
+export const { showModalCardWindow, closeModalCardWindow } = cardSlice.actions;
 
 export default cardSlice.reducer;
