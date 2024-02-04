@@ -5,7 +5,7 @@ import { showModalCardWindow, closeModalCardWindow } from "../../../../../store/
 import { useEffect, useRef, useState } from "react";
 import IconPlus from '../../../../../common/images/icon-plus.png'
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { editDescriptionCard, editTitleCard } from "../../../../../store/action-creators/CardsActionCreators";
+import { addNewCard, editDescriptionCard, editTitleCard } from "../../../../../store/action-creators/CardsActionCreators";
 import { fetchLists } from "../../../../../store/action-creators/ListsActionCreators";
 import { IList } from "../../../../../common/interfaces/IList";
 import { ICard } from "../../../../../common/interfaces/ICard";
@@ -26,18 +26,19 @@ export const CardModal = () => {
     const { boards } = useAppSelector(state => state.boards);
     const [isVisibleTextarea, setIsVisibleTextarea] = useState(false);
     const [cardTitle, setCardTitle] = useState("");
+    const [newCardTitle, setNewCardTitle] = useState("");
     const [listTitle, setListTitle] = useState("");
     const [listId, setListId] = useState(0);
+    const [newListId, setNewListId] = useState(listId);
     const [description, setDescription] = useState("");
     const [boardTitle, setBoardTitle] = useState("");
     const [selectListTitle, setSelectListTitle] = useState(listTitle);
     const [cardPosition, setCardPosition] = useState(0);
-    const [selectList, setSelectList] = useState<ICard[]>([]);
+    const [currentCards, setCurrentCards] = useState<ICard[]>([]);
     const [currentCardPosition, setCurrentCardPosition] = useState(0);
-    const [currentList, setCurrentList] = useState<IList>();
+
 
     useEffect(() => {
-
         setTimeout(() => {
             if (loc.pathname !== `/board/${board_id}`) {
                 setIsVisibleModal(true);
@@ -49,41 +50,27 @@ export const CardModal = () => {
             list.cards.forEach((card: ICard) => {
                 if (card.id === Number(card_id)) {
                     setCardTitle(card.title);
+                    setNewCardTitle(card.title)
                     setListTitle(list.title);
                     setListId(Number(list.id));
+                    setNewListId(Number(list.id));
                     setDescription(card.description);
                     setCardPosition(card.position);
                     setCurrentCardPosition(card.position)
-                    setSelectList(list.cards);
-                    // setCurrentList(list);
-
+                    setCurrentCards(list.cards);
                 }
-                // if (listTitle !== selectListTitle) {
-
-                //     // setCurrentList(list);
-                    // console.log("cards.length", currentList?.cards.length);
-                // }
             })
         })
         setBoardTitle(title);
         setSelectListTitle(listTitle)
-        // boards.forEach((board: IBoard) => {
-        //     if (board_id === board.id) {
-        //         setBoardTitle(board.title);
-        //     }
-        // })
 
     }, [board_id, isVisibleModal, loc.pathname, lists, card_id, dispatch, title, listTitle])
 
-    // console.log("cardTitle", cardTitle);
-    // console.log("listTitle", listTitle);
-    // console.log("selectList", selectList);
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
         if (newTitle === undefined || newTitle === "" || !PATTERN.test(newTitle)) return;
-        await dispatch(editTitleCard({ board_id: Number(board_id), card_id: Number(card_id), list_id: Number(listId), title: newTitle }));
-        await dispatch(fetchLists(Number(board_id)));
+        setNewCardTitle(newTitle);
     }
 
     const handleBlur = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,18 +100,6 @@ export const CardModal = () => {
         await dispatch(editDescriptionCard({ board_id: Number(board_id), id: Number(card_id), description: description, list_id: Number(listId) }))
         await dispatch(fetchLists(Number(board_id)));
     }
-    // console.log(textareaValues)
-    // console.log(description)
-    // console.log("listId", listId, "card?.id", card?.id)
-
-    // window.onclick = function (e: any) {
-    //     const modal = document.getElementsByClassName("window-up");
-    //     console.log(modal)
-    //     console.log(e.target)
-    //     if (e.target === modal) {
-    //         setIsVisibleModal(false);
-    //     }
-    // }
 
     const gettingBoardTitle = () => {
         let sel = document.querySelector(".select-board") as HTMLSelectElement;
@@ -134,30 +109,29 @@ export const CardModal = () => {
     const gettingListTitle = () => {
         let sel = document.querySelector(".select-list") as HTMLSelectElement;
         setSelectListTitle(sel.value);
-        // console.log("value", sel.value);
         lists.forEach((list: IList) => {
-            // console.log("list", list);
             if (sel.value === list.title) {
-                setCurrentList(list);
-                setCardPosition(list.cards.length);
-                // console.log("cards.length", list.cards.length);
-            } 
+                setCardPosition(list.cards.length + 1);
+                setCurrentCards(list.cards);
+                setNewListId(Number(list.id));
+            }
             if (sel.value === listTitle) {
                 setCardPosition(currentCardPosition);
             }
         })
+
     }
 
     const gettingCardPosition = () => {
         let sel = document.querySelector(".select-position") as HTMLSelectElement;
         setCardPosition(Number(sel.value));
-        // if (selectListTitle !== listTitle) {
-        //     console.log("OK",sel.selectedIndex); 
-        // }
     }
-
-
-
+    
+    const handleCopyCard = async () => {
+        await dispatch(addNewCard({ board_id: Number(board_id), card: { title: newCardTitle, list_id: newListId, position: cardPosition}}));
+        await dispatch(fetchLists(Number(board_id)));
+    }
+console.log("title: ", newCardTitle, "list_id: ", newListId, "position: ", cardPosition)
     return (
         <>
             {
@@ -170,7 +144,8 @@ export const CardModal = () => {
                                 defaultValue={cardTitle}
                                 name="title"
                                 onBlur={handleBlur}
-                                onKeyDown={handleKeyDown}
+                                    onKeyDown={handleKeyDown}
+                                    // onChange={handleChange}
                             />
                             <div className="card-modal-title-list">у списку {listTitle}</div>
                             <Link className="link" to={`/board/${board_id}`}>
@@ -302,7 +277,7 @@ export const CardModal = () => {
                                     </span>
                                 </button>
                             </div>
-                                <form className="form-select">
+                            <form className="form-select">
                                 <label>Назва</label>
                                 <textarea
                                     className='copy-modal-card-title-textarea'
@@ -312,7 +287,8 @@ export const CardModal = () => {
                                     autoComplete='off'
                                     name='Назва картки'
                                     placeholder='Назва картки'
-                                    defaultValue={cardTitle}
+                                        defaultValue={cardTitle}
+                                        onChange={(e: any) => handleChange(e)}
                                     // onChange={(e) => setDescription(e.target.value)}
                                     // onKeyDown={handleKeyDown}
                                     // onBlur={() => editDescription()}
@@ -346,7 +322,7 @@ export const CardModal = () => {
                                         <label>Список</label>
                                         <select name="select-list" className="select-list" onChange={gettingListTitle}>
                                             {lists &&
-                                                    lists.map(list => {
+                                                lists.map(list => {
                                                     if (list.title === listTitle) {
                                                         return (
                                                             <option value={list.title} key={list.id}>{list.title} (поточний)</option>
@@ -364,19 +340,13 @@ export const CardModal = () => {
                                         <span className="value board-value">{cardPosition}</span>
                                         <label>Позиція</label>
                                         <select name="select-position" className="select-position" onChange={gettingCardPosition}>
-                                            {selectList &&
-                                                selectList.map(card => {
+                                            {currentCards &&
+                                                currentCards.map(card => {
                                                     if (card.position === currentCardPosition) {
                                                         return (
                                                             <option value={card.position} key={card.id}>{card.position} (поточна)</option>
                                                         )
                                                     }
-                                                    // if (listTitle !== selectListTitle) {
-                                                    //     console.log(selectList.length)
-                                                    //     return (
-                                                    //         <option value={selectList.length} key={card.id}>{selectList.length}</option>
-                                                    //     )
-                                                    // }
                                                     return (
                                                         <option value={card.position} key={card.id}>{card.position}</option>
                                                     )
@@ -385,26 +355,8 @@ export const CardModal = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <button className="form-create-card">Створити картку</button>
+                                <button className="form-create-card" onClick={handleCopyCard}>Створити картку</button>
                             </form>
-                            {/* <div className="copy-modal-card-title-block">
-                                    <h4>Назва</h4>
-                                    <textarea
-                                        className='copy-modal-card-title-textarea'
-                                        spellCheck='false'
-                                        maxLength={512}
-                                        dir='auto'
-                                        autoComplete='off'
-                                        name='Назва картки'
-                                        placeholder='Назва картки'
-                                        defaultValue={cardTitle}
-                                        // onChange={(e) => setDescription(e.target.value)}
-                                        // onKeyDown={handleKeyDown}
-                                        // onBlur={() => editDescription()}
-                                        onFocus={e => e.target.select()}
-                                        autoFocus
-                                    ></textarea>
-                                </div> */}
                         </div>
                     }
                 </div>
